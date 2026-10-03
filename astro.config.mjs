@@ -4,6 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeFigure from './src/plugins/rehype-figure.mjs';
+import rehypeTaskList from './src/plugins/rehype-task-list.mjs';
 import codeTheme from './src/styles/code-theme.mjs';
 
 export default defineConfig({
@@ -11,6 +12,14 @@ export default defineConfig({
   site: 'https://gianlucanordio.github.io',
 
   integrations: [sitemap()],
+
+  // Put the CSS inside each page instead of a separate file: one request
+  // fewer before the first paint.
+  build: { inlineStylesheets: 'always' },
+
+  // Images in notes are resized to several widths, so phones download a
+  // smaller file than desktops.
+  image: { layout: 'constrained' },
 
   // Fonts are downloaded from Fontsource at build time and served from this
   // site (no request to a third party at runtime). Each font is exposed as a
@@ -44,7 +53,7 @@ export default defineConfig({
       // As in LaTeX: -- is an en dash, --- is an em dash.
       smartypants: { dashes: 'oldschool' },
       remarkPlugins: [remarkMath],
-      rehypePlugins: [rehypeKatex, rehypeFigure],
+      rehypePlugins: [rehypeKatex, rehypeFigure, rehypeTaskList],
     }),
     shikiConfig: { theme: codeTheme },
   },
