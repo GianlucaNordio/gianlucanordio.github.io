@@ -1,0 +1,441 @@
+/* The only stylesheet of the site. Sections:
+   1. Variables   2. Page   3. Header and footer   4. Note lists
+   5. Headings and links   6. Note content   7. Utilities */
+
+/* 1. Variables ------------------------------------------------------------ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Colours: text, background and a single grey for secondary text and rules. */
+  --bg: #fff;
+  --text: #111;
+  --grey: #707070;
+
+  /* Fonts. --font-body and --font-mono are defined in astro.config.mjs. */
+  --serif: var(--font-body);
+  --mono: var(--font-mono);
+
+  /* Sizes. The measure is in em, so it scales with the body size. */
+  --body-size: 1.1875rem; /* 19px */
+  --small-size: 0.8125rem; /* 13px, for monospace details */
+  --measure: 30em; /* about 65 characters per line */
+}
+
+/* Dark mode is the exact inversion. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111;
+    --text: #fff;
+    --grey: #8f8f8f;
+  }
+}
+
+@media (max-width: 40em) {
+  :root {
+    --body-size: 1.125rem; /* 18px */
+  }
+}
+
+/* 2. Page ----------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  box-sizing: content-box;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: var(--body-size);
+  line-height: 1.6;
+  font-optical-sizing: auto;
+  font-kerning: normal;
+}
+
+::selection {
+  background: var(--text);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+/* 3. Header and footer ---------------------------------------------------- */
+
+.site-header,
+.site-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1.5rem;
+  font-family: var(--mono);
+  font-size: var(--small-size);
+}
+
+.site-header {
+  padding: 2.5rem 0;
+  margin-bottom: 1.5rem;
+}
+
+.site-header a,
+.site-footer a {
+  display: inline-block;
+  padding: 0.35rem 0;
+}
+
+.site-title {
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.site-header nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.site-footer {
+  margin-top: 5rem;
+  padding: 1rem 0 2.5rem;
+  border-top: 1px solid var(--grey);
+  color: var(--grey);
+}
+
+/* 4. Note lists (home page and tag pages) --------------------------------- */
+
+.intro {
+  margin-bottom: 3rem;
+}
+
+.year h2,
+.tag-title {
+  margin: 2.25rem 0 0.5rem;
+  font-family: var(--mono);
+  font-size: var(--small-size);
+  font-weight: 400;
+  color: var(--grey);
+}
+
+.tag-title {
+  margin-top: 0;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.note-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.note-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  padding: 0.3rem 0;
+}
+
+.note-list time {
+  flex: none;
+}
+
+time,
+.meta,
+.draft {
+  font-family: var(--mono);
+  font-size: var(--small-size);
+  color: var(--grey);
+  font-variant-numeric: tabular-nums;
+}
+
+.draft {
+  margin-left: 0.5em;
+  padding: 0 0.4em;
+  border: 1px solid var(--grey);
+}
+
+/* 5. Headings and links --------------------------------------------------- */
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 2em 0 0.6em;
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 1.7em;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.3em;
+}
+
+h3 {
+  font-size: 1.1em;
+}
+
+h4 {
+  font-size: 1em;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* 6. Note content --------------------------------------------------------- */
+
+.note-header {
+  margin-bottom: 2.5rem;
+}
+
+.note-header h1 {
+  margin-bottom: 0.4em;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.25em;
+  margin: 0;
+}
+
+p,
+ul,
+ol,
+pre,
+table,
+blockquote,
+figure {
+  margin: 0 0 1.2em;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+strong,
+b {
+  font-weight: 600;
+}
+
+/* Lists */
+
+ul,
+ol {
+  padding-left: 1.4em;
+}
+
+li {
+  margin: 0.25em 0;
+}
+
+li > ul,
+li > ol {
+  margin: 0.25em 0 0;
+}
+
+.contains-task-list {
+  list-style: none;
+  padding-left: 0.2em;
+}
+
+.task-list-item input {
+  appearance: none;
+  width: 0.7em;
+  height: 0.7em;
+  margin: 0 0.6em 0 0;
+  border: 1px solid var(--text);
+}
+
+.task-list-item input:checked {
+  background: var(--text);
+}
+
+/* Blockquotes and rules */
+
+blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 1.2em;
+  border-left: 1px solid var(--grey);
+}
+
+blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+hr {
+  margin: 2.5em 0;
+  border: 0;
+  border-top: 1px solid var(--grey);
+}
+
+/* Code */
+
+code,
+kbd,
+pre {
+  font-family: var(--mono);
+  font-variant-ligatures: none;
+}
+
+code,
+kbd {
+  font-size: 0.84em;
+}
+
+pre {
+  padding: 0.9em 1.1em;
+  border: 1px solid var(--grey);
+  overflow-x: auto;
+  font-size: 0.75em;
+  line-height: 1.55;
+  tab-size: 2;
+}
+
+pre code {
+  font-size: inherit;
+}
+
+/* Tables */
+
+table {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+th,
+td {
+  padding: 0.45em 1.5em 0.45em 0;
+  border-bottom: 1px solid var(--grey);
+  text-align: left;
+  vertical-align: top;
+}
+
+th:last-child,
+td:last-child {
+  padding-right: 0;
+}
+
+/* Column alignment set in Markdown with :--- / :---: / ---: */
+[align='center'] {
+  text-align: center;
+}
+
+[align='right'] {
+  text-align: right;
+}
+
+th {
+  font-weight: 600;
+  border-top: 1px solid var(--text);
+  border-bottom-color: var(--text);
+}
+
+tbody tr:last-child td {
+  border-bottom-color: var(--text);
+}
+
+/* Images. `![alt](file.png "Caption")` becomes a figure with a caption. */
+
+img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+figure {
+  margin: 2em 0;
+}
+
+figcaption {
+  margin-top: 0.8em;
+  font-family: var(--mono);
+  font-size: var(--small-size);
+  line-height: 1.5;
+  color: var(--grey);
+}
+
+/* Math */
+
+.katex {
+  font-size: 1.08em;
+}
+
+.katex-display {
+  margin: 1.4em 0;
+  padding: 0.2em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Footnotes */
+
+sup {
+  font-size: 0.7em;
+  line-height: 0;
+}
+
+sup a,
+.data-footnote-backref {
+  font-family: var(--mono);
+  text-decoration: none;
+}
+
+sup a:hover,
+.data-footnote-backref:hover {
+  text-decoration: underline;
+}
+
+.footnotes {
+  margin-top: 3.5em;
+  padding-top: 1.2em;
+  border-top: 1px solid var(--grey);
+  font-size: 0.88em;
+}
+
+/* 7. Utilities ------------------------------------------------------------ */
+
+/* Hidden visually, still read by screen readers. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
