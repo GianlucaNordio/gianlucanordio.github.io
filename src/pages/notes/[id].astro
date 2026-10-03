@@ -1,0 +1,32 @@
+---
+// One page per note: /notes/<file name without .md>/
+import { render } from 'astro:content';
+import 'katex/dist/katex.min.css';
+import Base from '../../layouts/Base.astro';
+import { getNotes, formatDate } from '../../site.js';
+
+export async function getStaticPaths() {
+  const notes = await getNotes();
+  return notes.map((note) => ({ params: { id: note.id }, props: { note } }));
+}
+
+const { note } = Astro.props;
+const { title, date, tags, lang, description } = note.data;
+const { Content } = await render(note);
+---
+
+<Base title={title} description={description || undefined} lang={lang} type="article">
+  <article>
+    <header class="note-header">
+      <h1>{title}</h1>
+      <p class="meta" lang="en">
+        <time datetime={formatDate(date)}>{formatDate(date)}</time>
+        {tags.map((tag) => <a href={`/tags/${tag}/`}>#{tag}</a>)}
+        {note.data.draft && <span class="draft">draft</span>}
+      </p>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</Base>

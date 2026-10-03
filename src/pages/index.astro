@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import NoteList from '../components/NoteList.astro';
+import { SITE, getNotes } from '../site.js';
+
+const notes = await getNotes();
+---
+
+<Base>
+  <h1 class="sr-only">{SITE.title}</h1>
+  <div class="intro">
+    <p>
+      I'm Gianluca Nordio, a robotics software engineer in Copenhagen. I work on ROS 2, perception
+      and mobile robots.
+    </p>
+    <p>
+      These are my notes: technical write-ups, personal projects, and essays on books and endurance
+      sport. Some are in English, some in Italian.
+    </p>
+  </div>
+  <NoteList notes={notes} />
+</Base>

@@ -1,0 +1,30 @@
+---
+// A list of notes grouped by year, one "date  title" row per note.
+// Expects `notes` already sorted newest first (see getNotes in site.js).
+import { formatDate } from '../site.js';
+
+const { notes } = Astro.props;
+const yearOf = (note) => note.data.date.getUTCFullYear();
+const years = [...new Set(notes.map(yearOf))];
+---
+
+{
+  years.map((year) => (
+    <section class="year">
+      <h2>{year}</h2>
+      <ul class="note-list">
+        {notes
+          .filter((note) => yearOf(note) === year)
+          .map((note) => (
+            <li>
+              <time datetime={formatDate(note.data.date)}>{formatDate(note.data.date)}</time>
+              <span>
+                <a href={`/notes/${note.id}/`} lang={note.data.lang}>{note.data.title}</a>
+                {note.data.draft && <span class="draft">draft</span>}
+              </span>
+            </li>
+          ))}
+      </ul>
+    </section>
+  ))
+}
