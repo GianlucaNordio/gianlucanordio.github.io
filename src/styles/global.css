@@ -94,8 +94,7 @@ body {
 }
 
 .site-header a,
-.site-footer a,
-.theme-toggle {
+.site-footer a {
   display: inline-block;
   padding: 0.35rem 0;
 }
@@ -106,22 +105,43 @@ body {
   text-decoration: none;
 }
 
-/* The light/dark switch: a button set like a navigation link, in grey. */
+/* The light/dark switch: a thin box with two cells, the active one filled.
+   light-dark(a, b) is `a` in light mode and `b` in dark mode, so the filled
+   cell always matches the colours on screen. */
 .theme-toggle {
-  min-width: 5ch; /* "Light" and "Dark" take the same room: the menu stays put */
-  text-align: right;
+  display: flex;
+  border: 1px solid var(--text);
+}
+
+.theme-toggle[hidden] {
+  display: none;
+}
+
+.theme-toggle button {
+  padding: 0.15rem 0.55rem;
   border: 0;
-  background: none;
-  color: var(--grey);
   font: inherit;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.18em;
   cursor: pointer;
 }
 
-.theme-toggle:hover {
-  text-decoration-thickness: 2px;
+.theme-toggle [data-theme-choice='light'] {
+  background: light-dark(var(--text), transparent);
+  color: light-dark(var(--bg), var(--text));
+}
+
+.theme-toggle [data-theme-choice='dark'] {
+  background: light-dark(transparent, var(--text));
+  color: light-dark(var(--text), var(--bg));
+}
+
+.theme-toggle [aria-pressed='true'] {
+  cursor: default;
+}
+
+.theme-toggle [aria-pressed='false']:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
 }
 
 .site-header nav {
