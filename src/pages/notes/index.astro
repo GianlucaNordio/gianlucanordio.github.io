@@ -1,0 +1,13 @@
+---
+// /notes/: every note, newest first, grouped by year.
+import Base from '../../layouts/Base.astro';
+import NoteList from '../../components/NoteList.astro';
+import { getNotes } from '../../site.js';
+
+const notes = await getNotes();
+---
+
+<Base title="Notes" description="All notes, newest first.">
+  <h1>Notes</h1>
+  <NoteList notes={notes} />
+</Base>

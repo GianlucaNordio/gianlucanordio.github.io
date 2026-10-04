@@ -1,9 +1,15 @@
 ---
+// Home page: intro, the latest notes and a selection of projects.
 import Base from '../layouts/Base.astro';
 import NoteList from '../components/NoteList.astro';
-import { SITE, getNotes } from '../site.js';
+import { SITE, getNotes, getProjects } from '../site.js';
 
-const notes = await getNotes();
+const notes = (await getNotes()).slice(0, 5);
+
+// Projects marked `featured: true`; if none is, the three most recent.
+const projects = await getProjects();
+const featured = projects.filter((project) => project.data.featured);
+const selected = featured.length ? featured : projects.slice(0, 3);
 ---
 
 <Base>
@@ -14,9 +20,36 @@ const notes = await getNotes();
       and mobile robots.
     </p>
     <p>
-      These are my notes: technical write-ups, personal projects, and essays on books and endurance
-      sport. Some are in English, some in Italian.
+      This site holds my notes and projects: technical write-ups, things I have built, and essays on
+      books and endurance sport. Some are in English, some in Italian.
     </p>
   </div>
-  <NoteList notes={notes} />
+
+  <section class="home-section">
+    <div class="section-head">
+      <h2>Recent notes</h2>
+      <a href="/notes/">All notes</a>
+    </div>
+    <NoteList notes={notes} byYear={false} />
+  </section>
+
+  <section class="home-section">
+    <div class="section-head">
+      <h2>Projects</h2>
+      <a href="/projects/">All projects</a>
+    </div>
+    <ul class="note-list">
+      {
+        selected.map((project) => (
+          <li>
+            <time datetime={String(project.data.year)}>{project.data.year}</time>
+            <span>
+              <a href={`/projects/#${project.id}`}>{project.data.title}</a>
+              <span class="summary">{project.data.description}</span>
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
 </Base>

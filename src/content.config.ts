@@ -17,4 +17,22 @@ const notes = defineCollection({
   }),
 });
 
-export const collections = { notes };
+// Every Markdown file in src/content/projects/ is an entry on /projects/.
+// The text below the frontmatter is shown there; `description` is the one
+// line used on the home page.
+const projects = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/projects' }),
+  schema: z.object({
+    title: z.string(),
+    year: z.number(),
+    description: z.string(),
+    tech: z.array(z.string()).default([]),
+    repo: z.url().optional(),
+    link: z.url().optional(),
+    note: z.string().optional(),
+    featured: z.boolean().default(false),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { notes, projects };

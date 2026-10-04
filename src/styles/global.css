@@ -129,6 +129,20 @@ body {
   gap: 1.5rem;
 }
 
+/* On phones the header takes two lines: name and switch, then the menu. */
+@media (max-width: 40em) {
+  .site-header {
+    flex-wrap: wrap;
+    row-gap: 0.25rem;
+    padding: 1.5rem 0;
+  }
+
+  .site-header nav {
+    order: 1;
+    flex-basis: 100%;
+  }
+}
+
 .site-footer {
   margin-top: 5rem;
   padding: 1rem 0 2.5rem;
@@ -136,10 +150,33 @@ body {
   color: var(--grey);
 }
 
-/* 4. Note lists (home page and tag pages) --------------------------------- */
+/* 4. Lists of notes and projects ------------------------------------------ */
 
 .intro {
   margin-bottom: 3rem;
+}
+
+/* Home page sections: a small heading with an "All ..." link on its right. */
+.home-section {
+  margin-top: 3rem;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--grey);
+  font-family: var(--mono);
+  font-size: var(--small-size);
+}
+
+.section-head h2 {
+  margin: 0;
+  font: inherit;
+  color: var(--grey);
 }
 
 .year h2,
@@ -172,6 +209,35 @@ body {
 
 .note-list time {
   flex: none;
+}
+
+/* One-line description under a project title on the home page. */
+.summary {
+  display: block;
+  font-size: 0.88em;
+  color: var(--grey);
+}
+
+/* Projects page */
+
+.project {
+  margin-top: 3.5rem;
+  scroll-margin-top: 1.5rem;
+}
+
+.project h2 {
+  margin: 0 0 0.4em;
+}
+
+.project .meta {
+  margin-bottom: 1.2rem;
+}
+
+.project-links {
+  display: flex;
+  gap: 1.5em;
+  font-family: var(--mono);
+  font-size: var(--small-size);
 }
 
 time,

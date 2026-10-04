@@ -1,7 +1,8 @@
 # gianlucanordio.github.io
 
-My personal notes site. Publishing a note means adding one Markdown file to
-`src/content/notes/` and pushing to `main`.
+My personal site: a home page, notes, projects and an about page. Publishing
+a note means adding one Markdown file to `src/content/notes/` and pushing to
+`main`; a project is one Markdown file in `src/content/projects/`.
 
 Built with [Astro](https://astro.build) as a fully static site: no UI
 framework, one hand-written CSS file, and no client-side JavaScript apart
@@ -55,6 +56,32 @@ draft: true                  # optional: default false
 To publish: commit and push to `main`. GitHub Actions builds and deploys the
 site.
 
+## Adding a project
+
+Create a file in `src/content/projects/`, for example `my-robot.md`:
+
+```yaml
+---
+title: My robot                 # required
+year: 2026                      # required: used for ordering, newest first
+description: One line about it. # required: shown on the home page
+tech: [ROS 2, C++]              # optional
+repo: https://github.com/...    # optional: shown as "Code"
+link: https://...               # optional: demo, paper, video; shown as "Link"
+note: ekf-planar-robot          # optional: file name of a note, shown as "Write-up"
+featured: true                  # optional: list it on the home page
+draft: true                     # optional: as for notes
+---
+
+One or two paragraphs in Markdown, shown on the projects page.
+```
+
+All projects appear on `/projects/`. The home page lists the ones marked
+`featured: true`, or the three most recent if none is marked. A project has
+no page of its own: for a long write-up, write a note and point to it with
+`note:`. Math is only set up on note pages, which is one more reason to keep
+project texts short.
+
 ## Writing notes
 
 `src/content/notes/style-guide.md` shows every supported element; it is the
@@ -84,15 +111,18 @@ tsconfig.json               Editor support for Astro files (nothing to edit)
 scripts/new-note.mjs        The `npm run new` script
 public/                     Copied to the site as is: favicon.svg, robots.txt
 src/
-  content.config.ts         The frontmatter schema of a note
-  site.js                   Site title and description; getNotes(), formatDate()
+  content.config.ts         The frontmatter schemas of notes and projects
+  site.js                   Site title and description; getNotes(), getProjects()
   content/notes/*.md        The notes
   content/notes/images/     Images used by the notes
+  content/projects/*.md     The projects
   layouts/Base.astro        The one layout: <head>, header, footer
-  components/NoteList.astro "date  title" rows grouped by year
+  components/NoteList.astro "date  title" rows, grouped by year on /notes/
   components/ThemeToggle.astro  The light/dark switch in the header
-  pages/index.astro         Home: intro and the list of all notes
+  pages/index.astro         Home: intro, latest five notes, featured projects
+  pages/notes/index.astro   All notes, grouped by year
   pages/notes/[id].astro    A note page
+  pages/projects.astro      All projects
   pages/tags/[tag].astro    A tag page
   pages/about.astro         About
   pages/404.astro           Page not found
