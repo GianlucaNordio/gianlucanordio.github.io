@@ -1,0 +1,46 @@
+---
+// The light/dark switch in the header. Without a choice the site follows the
+// system setting. A choice is stored in the browser (localStorage) and is
+// applied on every page by the small script in the <head> of Base.astro.
+// The button starts hidden, so nothing dead is shown if JavaScript is off.
+---
+
+<button class="theme-toggle" type="button" hidden></button>
+
+<script is:inline>
+  {
+    const root = document.documentElement;
+    const button = document.querySelector('.theme-toggle');
+    const systemDark = matchMedia('(prefers-color-scheme: dark)');
+    const system = () => (systemDark.matches ? 'dark' : 'light');
+    const other = () => ((root.dataset.theme || system()) === 'dark' ? 'light' : 'dark');
+
+    // The button names the mode it switches to.
+    const label = () => {
+      button.textContent = other() === 'dark' ? 'Dark' : 'Light';
+      button.setAttribute('aria-label', `Switch to ${other()} mode`);
+    };
+
+    button.addEventListener('click', () => {
+      const next = other();
+      try {
+        if (next === system()) {
+          // Back to what the system asks for: forget the choice.
+          delete root.dataset.theme;
+          localStorage.removeItem('theme');
+        } else {
+          root.dataset.theme = next;
+          localStorage.setItem('theme', next);
+        }
+      } catch {
+        // Storage can be blocked (private mode): the switch still works on this page.
+        root.dataset.theme = next;
+      }
+      label();
+    });
+
+    systemDark.addEventListener('change', label);
+    label();
+    button.hidden = false;
+  }
+</script>

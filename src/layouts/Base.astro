@@ -2,6 +2,7 @@
 // The one layout shared by every page: <head>, site header, footer.
 import { Font } from 'astro:assets';
 import '../styles/global.css';
+import ThemeToggle from '../components/ThemeToggle.astro';
 import { SITE } from '../site.js';
 
 const { title, description = SITE.description, lang = 'en', type = 'website' } = Astro.props;
@@ -28,6 +29,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:url" content={canonical} />
     <Font cssVariable="--font-body" preload={[{ style: 'normal' }]} />
     <Font cssVariable="--font-mono" />
+    <script is:inline>
+      // Apply a theme chosen with the switch before the page is drawn.
+      try {
+        const theme = localStorage.getItem('theme');
+        if (theme) document.documentElement.dataset.theme = theme;
+      } catch {}
+    </script>
   </head>
   <body>
     <header class="site-header" lang="en">
@@ -36,6 +44,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         <a href="/">Notes</a>
         <a href="/about/">About</a>
       </nav>
+      <ThemeToggle />
     </header>
     <main>
       <slot />

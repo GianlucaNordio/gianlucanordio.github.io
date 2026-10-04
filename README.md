@@ -4,7 +4,8 @@ My personal notes site. Publishing a note means adding one Markdown file to
 `src/content/notes/` and pushing to `main`.
 
 Built with [Astro](https://astro.build) as a fully static site: no UI
-framework, no client-side JavaScript, one hand-written CSS file.
+framework, one hand-written CSS file, and no client-side JavaScript apart
+from the few lines behind the light/dark switch.
 
 ## Quick start
 
@@ -89,6 +90,7 @@ src/
   content/notes/images/     Images used by the notes
   layouts/Base.astro        The one layout: <head>, header, footer
   components/NoteList.astro "date  title" rows grouped by year
+  components/ThemeToggle.astro  The light/dark switch in the header
   pages/index.astro         Home: intro and the list of all notes
   pages/notes/[id].astro    A note page
   pages/tags/[tag].astro    A tag page
@@ -112,20 +114,27 @@ map directly to URLs.
 
 ## Changing the design
 
-**Colours.** At the top of `src/styles/global.css`:
+**Colours.** At the top of `src/styles/global.css`. Each colour is written
+once, as `light-dark(value in light mode, value in dark mode)`:
 
 ```css
 :root {
-  --bg: #fff;
-  --text: #111;
-  --grey: #707070;   /* secondary text and hairline rules */
+  --bg: light-dark(#fff, #111);
+  --text: light-dark(#111, #fff);
+  --grey: light-dark(#707070, #8f8f8f);   /* secondary text and hairline rules */
 }
 ```
 
-The dark-mode values are in the `@media (prefers-color-scheme: dark)` block
-just below. Code blocks use the same variables, so they follow automatically.
-Keep the grey dark enough to read as text: `#707070` on white is close to the
-lightest value that still meets the WCAG AA contrast ratio (4.5:1).
+Code blocks use the same variables, so they follow automatically. Keep the
+grey readable as text: `#707070` on white is close to the lightest value
+that still meets the WCAG AA contrast ratio (4.5:1).
+
+**Light and dark mode.** The site follows the system setting. The switch in
+the header (`src/components/ThemeToggle.astro`) overrides it: the choice is
+saved in the browser's localStorage and applied by a short script in the
+`<head>` of `Base.astro` before the page is drawn. Choosing the mode the
+system already asks for clears the saved choice, so the site follows the
+system again. With JavaScript off the switch is not shown.
 
 **Fonts.** In `astro.config.mjs`, change `name` in the `fonts` list to any
 family on [Fontsource](https://fontsource.org), for example:

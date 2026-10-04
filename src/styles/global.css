@@ -7,10 +7,12 @@
 :root {
   color-scheme: light dark;
 
-  /* Colours: text, background and a single grey for secondary text and rules. */
-  --bg: #fff;
-  --text: #111;
-  --grey: #707070;
+  /* Colours, each written as light-dark(light value, dark value): text,
+     background and a single grey for secondary text and rules.
+     Dark mode is the exact inversion. */
+  --bg: light-dark(#fff, #111);
+  --text: light-dark(#111, #fff);
+  --grey: light-dark(#707070, #8f8f8f);
 
   /* Fonts. --font-body and --font-mono are defined in astro.config.mjs. */
   --serif: var(--font-body);
@@ -22,13 +24,14 @@
   --measure: 30em; /* about 65 characters per line */
 }
 
-/* Dark mode is the exact inversion. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #111;
-    --text: #fff;
-    --grey: #8f8f8f;
-  }
+/* `color-scheme: light dark` above follows the system setting. The switch
+   in the header sets data-theme on <html> to force one of the two. */
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
 }
 
 @media (max-width: 40em) {
@@ -91,14 +94,34 @@ body {
 }
 
 .site-header a,
-.site-footer a {
+.site-footer a,
+.theme-toggle {
   display: inline-block;
   padding: 0.35rem 0;
 }
 
 .site-title {
+  margin-right: auto;
   font-weight: 700;
   text-decoration: none;
+}
+
+/* The light/dark switch: a button set like a navigation link, in grey. */
+.theme-toggle {
+  min-width: 5ch; /* "Light" and "Dark" take the same room: the menu stays put */
+  text-align: right;
+  border: 0;
+  background: none;
+  color: var(--grey);
+  font: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  text-decoration-thickness: 2px;
 }
 
 .site-header nav {
