@@ -4,7 +4,7 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import { getProjects } from '../site.js';
-import portrait from '../assets/photos/portrait-drone.jpg';
+import portrait from '../assets/photos/portrait-hero.jpg';
 import swim from '../assets/photos/swim.jpg';
 import bikeAutumn from '../assets/photos/bike-autumn.jpg';
 import bikeRide from '../assets/photos/bike-ride.jpg';
@@ -49,13 +49,13 @@ const outside = [
     <figure class="hero-photo slip photo">
       <Image
         src={portrait}
-        alt="Gianluca holding the autonomous racing drone he worked on at MARS Lab."
+        alt="Gianluca in a black tuxedo and bow tie, smiling."
         widths={[320, 480, 720]}
         sizes="(max-width: 50em) 18rem, 24rem"
         loading="eager"
         fetchpriority="high"
       />
-      <figcaption>The A2RL racing drone, MARS Lab, DTU.</figcaption>
+      <figcaption>Gianluca Nordio</figcaption>
     </figure>
   </section>
 

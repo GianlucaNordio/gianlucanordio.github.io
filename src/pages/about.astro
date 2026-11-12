@@ -1,17 +1,46 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import portrait from '../assets/photos/portrait-formal.jpg';
+import portrait from '../assets/photos/portrait-drone.jpg';
+
+const facts = [
+  { label: 'Based in', value: 'Lyngby, near Copenhagen' },
+  { label: 'From', value: 'Italy' },
+  { label: 'Work', value: 'Robotics Software Engineer, Robotize' },
+  { label: 'Languages', value: 'Italian, English (C1, IELTS 7.5)' },
+  { label: 'Outside work', value: 'Triathlon training' },
+];
 ---
 
 <Base title="About" description="About Gianluca Nordio." bare>
   <h1 class="page-title"><span class="tape">About</span></h1>
   <div class="about">
-    <figure class="slip photo">
-      <Image src={portrait} alt="Gianluca in a black tuxedo and bow tie." widths={[300, 500]} sizes="15rem" />
-      <figcaption>Gianluca Nordio</figcaption>
-    </figure>
-    <div class="slip slip-about">
+    <div class="about-side">
+      <figure class="slip photo">
+        <Image
+          src={portrait}
+          alt="Gianluca holding the autonomous racing drone he worked on at MARS Lab."
+          widths={[300, 500]}
+          sizes="17rem"
+        />
+        <figcaption>The A2RL racing drone, MARS Lab, DTU.</figcaption>
+      </figure>
+      <section class="slip facts" aria-labelledby="facts-title">
+        <span class="kicker" id="facts-title">Quick facts</span>
+        <ul>
+          {
+            facts.map((fact) => (
+              <li>
+                <b>{fact.label}</b>
+                {fact.value}
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </div>
+    <div class="slip about-main">
+      <span class="kicker">About me</span>
       <p class="slip-lede">
         Hi, I'm Gianluca Nordio, a robotics software engineer at Robotize, based in Copenhagen. My work is
         mostly ROS 2, perception and mobile robots.
@@ -22,14 +51,17 @@ import portrait from '../assets/photos/portrait-formal.jpg';
         learning-based robotics on mobile robots: legged robots, autonomous vehicles and drones.
       </p>
       <p>
-        This site collects my projects, from my thesis and robotics competitions to hackathons. I'm
-        Italian, and outside work I train for triathlon.
+        This site collects my projects, from my thesis and robotics competitions to hackathons. Outside
+        work I train for triathlon.
+      </p>
+      <p class="actions">
+        <a class="btn btn-tape btn-sm" href="/cv/">Read my CV →</a>
+        <a class="btn btn-paper btn-sm" href="/projects/">See the projects →</a>
       </p>
       <ul class="chips">
-        <li><a class="chip" href="/cv/">CV</a></li>
+        <li><a class="chip" href="mailto:gianluca.nordio01@outlook.it">Email ↗</a></li>
         <li><a class="chip" href="https://github.com/GianlucaNordio">GitHub ↗</a></li>
         <li><a class="chip" href="https://www.linkedin.com/in/gianluca-nordio/">LinkedIn ↗</a></li>
-        <li><a class="chip" href="mailto:gianluca.nordio01@outlook.it">Email ↗</a></li>
       </ul>
     </div>
   </div>

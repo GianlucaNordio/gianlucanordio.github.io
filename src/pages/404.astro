@@ -2,9 +2,14 @@
 import Base from '../layouts/Base.astro';
 ---
 
-<Base title="Page not found">
-  <div class="prose">
-    <h1>Page not found</h1>
-    <p>There is nothing at this address. <a href="/">Back to the home page</a>.</p>
+<Base title="Page not found" bare>
+  <h1 class="page-title"><span class="tape">404</span></h1>
+  <div class="slip" style="--tilt: -0.5deg">
+    <span class="kicker">Page not found</span>
+    <p class="slip-lede">There is nothing at this address.</p>
+    <p class="actions">
+      <a class="btn btn-tape" href="/">Back to the home page →</a>
+      <a class="btn btn-paper" href="/projects/">See the projects →</a>
+    </p>
   </div>
 </Base>

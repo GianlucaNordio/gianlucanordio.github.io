@@ -55,7 +55,10 @@ html {
   background: var(--bg-low);
 }
 
+/* A column, so the footer sits at the bottom of short pages. */
 body {
+  display: flex;
+  flex-direction: column;
   position: relative;
   min-height: 100vh;
   margin: 0;
@@ -92,6 +95,7 @@ body > * {
 }
 
 .page {
+  flex: 1 0 auto;
   width: 100%;
   max-width: 72rem;
   margin: 0 auto;
@@ -272,10 +276,19 @@ a.chip:hover {
   font-size: var(--small-size);
 }
 
+.site-footer {
+  justify-content: space-between;
+}
+
 .site-footer .tape {
-  margin-right: auto;
   padding: 0.5em 0.7em;
   font-weight: 500;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 /* 5. Slips ---------------------------------------------------------------- */
@@ -744,7 +757,7 @@ time,
 /* About page */
 .about {
   display: grid;
-  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
   gap: 2.5rem;
   align-items: start;
   margin-top: 1rem;
@@ -754,8 +767,43 @@ time,
   --tilt: -2deg;
 }
 
-.about .slip:not(.photo) {
+.about-side {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.about-main {
   --tilt: 0.3deg;
+}
+
+.facts {
+  --tilt: -0.6deg;
+  padding-top: clamp(1.6rem, 3.4vw, 2.2rem);
+}
+
+.facts ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.95rem;
+}
+
+.facts li {
+  padding: 0.35rem 0;
+  border-bottom: 1px dashed color-mix(in srgb, var(--grey) 45%, transparent);
+}
+
+.facts li:last-child {
+  border-bottom: 0;
+}
+
+.facts b {
+  display: block;
+  color: var(--accent);
+  font: 500 var(--small-size) / 1.4 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 @media (max-width: 45em) {
@@ -765,6 +813,12 @@ time,
 
   .about .photo {
     max-width: 14rem;
+  }
+
+  .about-side {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
   }
 }
 
@@ -1048,4 +1102,10 @@ sup a:hover,
 /* Offset slips: pushed to the right edge, for a collage rhythm. */
 .slip-right {
   margin-left: auto;
+}
+
+/* In the body column, auto margins would shrink these to their content. */
+.topbar,
+.site-footer {
+  width: 100%;
 }
