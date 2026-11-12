@@ -30,6 +30,8 @@ const projects = defineCollection({
     repo: z.url().optional(),
     link: z.url().optional(),
     note: z.string().optional(),
+    // Link to a LinkedIn post: its photos and video are embedded on /projects/.
+    linkedin: z.url().optional(),
     featured: z.boolean().default(false),
     draft: z.boolean().default(false),
   }),

@@ -556,3 +556,13 @@ sup a:hover,
 .cv-entry .meta {
   margin: 0 0 0.5em;
 }
+
+/* A LinkedIn post embedded on /projects/, with its photos and video. */
+.linkedin-embed {
+  display: block;
+  width: 100%;
+  max-width: 504px;
+  height: 640px;
+  margin: 1.2rem 0;
+  border: 1px solid var(--grey);
+}

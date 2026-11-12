@@ -4,6 +4,12 @@ import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import { getProjects } from '../site.js';
 
+// https://www.linkedin.com/posts/...-activity-123-... -> the embed address of that post.
+function linkedinEmbed(url) {
+  const match = url?.match(/(activity|ugcPost)[-:](\d+)/);
+  return match && `https://www.linkedin.com/embed/feed/update/urn:li:${match[1]}:${match[2]}`;
+}
+
 const projects = await Promise.all(
   (await getProjects()).map(async (project) => ({
     ...project,
@@ -26,11 +32,21 @@ const projects = await Promise.all(
           {data.tech.length > 0 && <span>{data.tech.join(' · ')}</span>}
         </p>
         <div class="prose">{body?.trim() ? <Content /> : <p>{data.description}</p>}</div>
-        {(data.repo || data.note || data.link) && (
+        {data.linkedin && (
+          <iframe
+            class="linkedin-embed"
+            src={linkedinEmbed(data.linkedin)}
+            title={`LinkedIn post: ${data.title}`}
+            loading="lazy"
+            allowfullscreen
+          />
+        )}
+        {(data.repo || data.note || data.link || data.linkedin) && (
           <p class="project-links">
             {data.repo && <a href={data.repo}>Code</a>}
             {data.note && <a href={`/notes/${data.note}/`}>Write-up</a>}
             {data.link && <a href={data.link}>Link</a>}
+            {data.linkedin && <a href={data.linkedin}>LinkedIn post</a>}
           </p>
         )}
       </article>
