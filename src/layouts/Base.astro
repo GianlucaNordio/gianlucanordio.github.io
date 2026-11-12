@@ -1,13 +1,22 @@
 ---
-// The one layout shared by every page: <head>, site header, footer.
+// The one layout shared by every page: <head>, top bar, footer.
+// The page sits on a grainy sky (day in light mode, night in dark mode).
+// By default the content is set on one paper "slip"; pages with their own
+// arrangement of slips (home, projects, CV) pass `bare`.
 import { Font } from 'astro:assets';
 import '../styles/global.css';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import { SITE } from '../site.js';
 
-const { title, description = SITE.description, lang = 'en', type = 'website' } = Astro.props;
+const { title, description = SITE.description, lang = 'en', type = 'website', bare = false } = Astro.props;
 const pageTitle = title ? `${title} · ${SITE.title}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/projects/', label: 'Projects' },
+  { href: '/notes/', label: 'Notes' },
+  { href: '/about/', label: 'About' },
+];
 ---
 
 <!doctype html>
@@ -27,8 +36,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:type" content={type} />
     <meta property="og:url" content={canonical} />
-    <Font cssVariable="--font-body" preload={[{ style: 'normal' }]} />
-    <Font cssVariable="--font-mono" />
+    <Font cssVariable="--font-body" preload={[{ style: 'normal', weight: 400 }]} />
+    <Font cssVariable="--font-mono" preload={[{ style: 'normal', weight: 700 }]} />
     <script is:inline>
       // Apply a theme chosen with the switch before the page is drawn.
       try {
@@ -38,22 +47,37 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     </script>
   </head>
   <body>
-    <header class="site-header" lang="en">
-      <a class="site-title" href="/">{SITE.title}</a>
+    <a class="skip tape" href="#content">Skip to content</a>
+    <header class="topbar" lang="en">
+      <a class="topbar-brand tape" href="/">{SITE.title}</a>
       <nav aria-label="Main">
-        <a href="/notes/">Notes</a>
-        <a href="/projects/">Projects</a>
-        <a href="/cv/">CV</a>
-        <a href="/about/">About</a>
+        {
+          nav.map((item) => (
+            <a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          ))
+        }
+        <a class="btn btn-tape btn-sm" href="/cv/" aria-current={path.startsWith('/cv/') ? 'page' : undefined}>CV →</a>
       </nav>
       <ThemeToggle />
     </header>
-    <main>
-      <slot />
+    <main id="content" class:list={['page', { 'page-bare': bare }]}>
+      {
+        bare ? (
+          <slot />
+        ) : (
+          <div class="slip slip-read">
+            <slot />
+          </div>
+        )
+      }
     </main>
     <footer class="site-footer" lang="en">
-      <span>© {new Date().getFullYear()} {SITE.title}</span>
-      <a href="/rss.xml">RSS</a>
+      <span class="tape">© {new Date().getFullYear()} {SITE.title}</span>
+      <a class="chip" href="https://github.com/GianlucaNordio">GitHub ↗</a>
+      <a class="chip" href="https://www.linkedin.com/in/gianluca-nordio/">LinkedIn ↗</a>
+      <a class="chip" href="/rss.xml">RSS</a>
     </footer>
   </body>
 </html>

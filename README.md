@@ -151,23 +151,20 @@ map directly to URLs.
 
 ## Changing the design
 
-**Colours.** At the top of `src/styles/global.css`. Each colour is written
-once, as `light-dark(value in light mode, value in dark mode)`:
+**Look.** Paper slips and yellow "tape" labels on a grainy sky, in the spirit
+of a collage. A `.slip` is a paper panel (`--tilt` rotates it slightly), a
+`.tape` is a yellow monospace label, `.chip` a small grey label and `.btn` a
+button. Pages are on one reading slip by default; home, projects, CV and
+about pass `bare` to `Base.astro` and arrange their own slips.
 
-```css
-:root {
-  --bg: light-dark(#fff, #111);
-  --text: light-dark(#111, #fff);
-  --grey: light-dark(#707070, #8f8f8f);   /* secondary text and hairline rules */
-}
-```
+**Colours.** At the top of `src/styles/global.css`, each written as
+`light-dark(day value, night value)`: the sky gradient, the paper, the text
+and a grey that stays readable on paper (WCAG AA). The tape is always
+`#ffee00` with near-black ink on it.
 
-Code blocks use the same variables, so they follow automatically. Keep the
-grey readable as text: `#707070` on white is close to the lightest value
-that still meets the WCAG AA contrast ratio (4.5:1).
-
-**Light and dark mode.** The site follows the system setting. The switch in
-the header (`src/components/ThemeToggle.astro`) overrides it: the choice is
+**Light and dark mode.** The site follows the system setting. In dark mode the sky turns to night and the
+slips to dark paper. The switch in the header
+(`src/components/ThemeToggle.astro`) overrides it: the choice is
 saved in the browser's localStorage and applied by a short script in the
 `<head>` of `Base.astro` before the page is drawn. Choosing the mode the
 system already asks for clears the saved choice, so the site follows the
@@ -177,7 +174,7 @@ system again. With JavaScript off the switch is not shown.
 family on [Fontsource](https://fontsource.org), for example:
 
 ```js
-name: 'Newsreader',        // was 'Source Serif 4'
+name: 'Newsreader',        // was 'Fraunces'
 cssVariable: '--font-body',
 weights: [400, 600],
 ```
@@ -186,9 +183,12 @@ Astro downloads the files at build time and serves them from this site.
 Nothing else needs to change: the CSS refers to `--font-body` and
 `--font-mono`. List only weights the new family actually has.
 
-**Sizes.** Also at the top of `global.css`: `--body-size` (19px on desktop,
-18px on phones), `--small-size` (monospace details) and `--measure` (the
-column width, about 65 characters per line).
+**Sizes.** Also at the top of `global.css`: `--body-size` (18px, 17px on
+phones), `--small-size` (labels) and `--measure` (the width of a slip).
+
+**Photos.** Photos used by pages are in `src/assets/photos/`, project
+pictures in `src/content/projects/images/`. Strip location data from phone
+photos before adding them.
 
 **Code highlighting.** `src/styles/code-theme.mjs` maps kinds of token
 (comment, keyword, string) to bold, italic or grey.

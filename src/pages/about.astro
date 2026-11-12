@@ -1,23 +1,37 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import portrait from '../assets/photos/portrait-formal.jpg';
 ---
 
-<Base title="About" description="About Gianluca Nordio.">
-  <div class="prose">
-    <h1>About</h1>
-    <p>
-      I'm Gianluca Nordio, a robotics software engineer at Robotize, based in Copenhagen. My work is
-      mostly ROS 2, perception and mobile robots. I hold an M.Sc. in Autonomous Systems from DTU and
-      an M.Sc. in Computer Engineering from the University of Padua.
-    </p>
-    <p>
-      This site collects my notes: technical ones on robotics, localization and reinforcement
-      learning, write-ups of personal projects, and essays on books and endurance sport.
-    </p>
-    <p>
-      My <a href="/cv/">CV</a> has the details. You can find my code on
-      <a href="https://github.com/GianlucaNordio">GitHub</a> and me on
-      <a href="https://www.linkedin.com/in/gianluca-nordio">LinkedIn</a>.
-    </p>
+<Base title="About" description="About Gianluca Nordio." bare>
+  <h1 class="page-title"><span class="tape">About</span></h1>
+  <div class="about">
+    <figure class="slip photo">
+      <Image src={portrait} alt="Gianluca in a black tuxedo and bow tie." widths={[300, 500]} sizes="15rem" />
+      <figcaption>Gianluca Nordio</figcaption>
+    </figure>
+    <div class="slip slip-about">
+      <p class="slip-lede">
+        Hi, I'm Gianluca Nordio, a robotics software engineer at Robotize, based in Copenhagen. My work is
+        mostly ROS 2, perception and mobile robots.
+      </p>
+      <p>
+        I hold an M.Sc. in Autonomous Systems from DTU and an M.Sc. in Computer Engineering from the
+        University of Padua, through the TIME double degree. The direction I care about is
+        learning-based robotics on mobile robots: legged robots, autonomous vehicles and drones.
+      </p>
+      <p>
+        This site collects my projects and notes: technical ones on robotics, localization and
+        reinforcement learning, and essays on books and endurance sport. I'm Italian, and outside work
+        I train for triathlon.
+      </p>
+      <ul class="chips">
+        <li><a class="chip" href="/cv/">CV</a></li>
+        <li><a class="chip" href="https://github.com/GianlucaNordio">GitHub ↗</a></li>
+        <li><a class="chip" href="https://www.linkedin.com/in/gianluca-nordio/">LinkedIn ↗</a></li>
+        <li><a class="chip" href="mailto:gianluca.nordio01@outlook.it">Email ↗</a></li>
+      </ul>
+    </div>
   </div>
 </Base>

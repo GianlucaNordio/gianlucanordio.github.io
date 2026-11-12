@@ -1,8 +1,14 @@
 ---
-// Home page: intro, the latest notes and a selection of projects.
+// Home: the hero, what I am working on, featured projects, life outside
+// work, recent notes and how to reach me.
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import NoteList from '../components/NoteList.astro';
 import { SITE, getNotes, getProjects } from '../site.js';
+import portrait from '../assets/photos/portrait-drone.jpg';
+import swim from '../assets/photos/swim.jpg';
+import bikeAutumn from '../assets/photos/bike-autumn.jpg';
+import bikeRide from '../assets/photos/bike-ride.jpg';
 
 const notes = (await getNotes()).slice(0, 5);
 
@@ -10,50 +16,139 @@ const notes = (await getNotes()).slice(0, 5);
 const projects = await getProjects();
 const featured = projects.filter((project) => project.data.featured);
 const selected = featured.length ? featured : projects.slice(0, 3);
+
+const outside = [
+  { src: swim, alt: 'Gianluca swimming freestyle in a pool lane.', caption: 'Swim' },
+  { src: bikeAutumn, alt: 'Gianluca riding a road bike on a cycle path lined with autumn trees.', caption: 'Bike' },
+  { src: bikeRide, alt: 'Two cyclists riding side by side on a country road under a cloudy sky.', caption: 'Ride with friends' },
+];
 ---
 
-<Base>
-  <h1 class="sr-only">{SITE.title}</h1>
-  <div class="intro">
-    <p>
-      I'm Gianluca Nordio, a robotics software engineer at Robotize in Copenhagen. I work on ROS 2,
-      perception and mobile robots. Here is my <a href="/cv/">CV</a>.
+<Base bare>
+  <section class="hero" aria-labelledby="hero-title">
+    <h1 class="hero-title" id="hero-title">
+      <span class="tape">Gianluca</span><br /><span class="tape">Nordio</span>
+    </h1>
+
+    <div class="hero-stack">
+      <span class="tape">Robotics<br />software<br />engineer</span>
+      <p class="credit">
+        <span class="tape">ROBOTIZE · COPENHAGEN</span>
+        <small>M.Sc. DTU &amp; University of Padua</small>
+      </p>
+    </div>
+
+    <div class="hero-deck slip">
+      <p>
+        I put software on real robots: perception, localization and learning-based control for
+        mobile robots, from warehouse pallet movers to racing drones.
+      </p>
+      <div class="actions">
+        <a class="btn btn-tape" href="/cv/">Read my CV →</a>
+        <a class="btn btn-paper" href="/projects/">See the projects →</a>
+      </div>
+    </div>
+
+    <figure class="hero-photo slip photo">
+      <Image
+        src={portrait}
+        alt="Gianluca holding the autonomous racing drone he worked on at MARS Lab."
+        widths={[320, 480, 720]}
+        sizes="(max-width: 50em) 18rem, 24rem"
+        loading="eager"
+        fetchpriority="high"
+      />
+      <figcaption>The A2RL racing drone, MARS Lab, DTU.</figcaption>
+    </figure>
+  </section>
+
+  <section class="section" aria-labelledby="now">
+    <div class="slip slip-right" style="--tilt: 0.4deg">
+      <span class="kicker">Now</span>
+      <h2 class="sr-only" id="now">What I'm working on</h2>
+      <p class="slip-lede">
+        Since September 2026 I work full time at Robotize, on robotics and AI software for autonomous
+        pallet robots: object detection and segmentation deployed on NVIDIA Jetson with TensorRT, in
+        ROS 2.
+      </p>
+      <p>
+        On the side I train an RL locomotion policy for the Unitree Go2 in MuJoCo Playground, and
+        build a rosbag analyzer whose every finding is backed by the data. Outside work I train for
+        triathlon.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="projects-title">
+    <h2 class="section-title" id="projects-title"><span class="tape">Selected projects</span></h2>
+    <div class="slip-grid">
+      {
+        selected.map((project) => (
+          <a class="slip card lift" href={`/projects/#${project.id}`}>
+            {project.data.images[0] && (
+              <Image
+                src={project.data.images[0].src}
+                alt={project.data.images[0].alt}
+                widths={[400, 700]}
+                sizes="(max-width: 40em) 100vw, 22rem"
+              />
+            )}
+            <div class="card-body">
+              <span class="year">{project.data.year}</span>
+              <h3>{project.data.title}</h3>
+              <p>{project.data.description}</p>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+    <p class="actions" style="margin-top: 2.5rem">
+      <a class="btn btn-tape" href="/projects/">All {projects.length} projects →</a>
     </p>
-    <p>
-      This site holds my notes and projects: technical write-ups, things I have built, and essays on
-      books and endurance sport. Some are in English, some in Italian.
-    </p>
-  </div>
+  </section>
+
+  <section class="section" aria-labelledby="outside-title">
+    <h2 class="section-title" id="outside-title"><span class="tape">Outside work</span></h2>
+    <p class="section-note">Swim, bike, run: training for triathlon.</p>
+    <div class="photo-row">
+      {
+        outside.map((photo) => (
+          <figure class="slip photo">
+            <Image src={photo.src} alt={photo.alt} widths={[300, 500]} sizes="17rem" />
+            <figcaption>{photo.caption}</figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </section>
 
   {
     notes.length > 0 && (
-      <section class="home-section">
-        <div class="section-head">
-          <h2>Recent notes</h2>
-          <a href="/notes/">All notes</a>
+      <section class="section" aria-labelledby="notes-title">
+        <h2 class="section-title" id="notes-title">
+          <span class="tape">Recent notes</span>
+        </h2>
+        <div class="slip">
+          <NoteList notes={notes} byYear={false} />
         </div>
-        <NoteList notes={notes} byYear={false} />
       </section>
     )
   }
 
-  <section class="home-section">
-    <div class="section-head">
-      <h2>Projects</h2>
-      <a href="/projects/">All projects</a>
+  <section class="section" aria-labelledby="contact-title">
+    <div class="slip" style="--tilt: -0.4deg">
+      <span class="kicker">Contact</span>
+      <h2 class="sr-only" id="contact-title">Contact</h2>
+      <p>
+        I'm happy to talk about robotics, perception or learning-based control. The quickest way to
+        reach me is email or LinkedIn.
+      </p>
+      <ul class="chips">
+        <li><a class="chip" href="mailto:gianluca.nordio01@outlook.it">Email ↗</a></li>
+        <li><a class="chip" href="https://www.linkedin.com/in/gianluca-nordio/">LinkedIn ↗</a></li>
+        <li><a class="chip" href="https://github.com/GianlucaNordio">GitHub ↗</a></li>
+        <li><a class="chip" href="/gianluca-nordio-cv.pdf">CV (PDF)</a></li>
+      </ul>
     </div>
-    <ul class="note-list">
-      {
-        selected.map((project) => (
-          <li>
-            <time datetime={String(project.data.year)}>{project.data.year}</time>
-            <span>
-              <a href={`/projects/#${project.id}`}>{project.data.title}</a>
-              <span class="summary">{project.data.description}</span>
-            </span>
-          </li>
-        ))
-      }
-    </ul>
   </section>
 </Base>

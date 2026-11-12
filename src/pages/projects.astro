@@ -1,5 +1,5 @@
 ---
-// /projects/: every project on one page, newest first.
+// /projects/: every project on one page, newest first, one slip each.
 import { render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
@@ -19,44 +19,55 @@ const projects = await Promise.all(
 );
 ---
 
-<Base title="Projects" description="Things I have built.">
-  <h1>Projects</h1>
-  {
-    projects.map(({ id, data, body, Content }) => (
-      <article class="project" id={id}>
-        <h2>
-          {data.title}
-          {data.draft && <span class="draft">draft</span>}
-        </h2>
-        <p class="meta">
-          <span>{data.year}</span>
-          {data.tech.length > 0 && <span>{data.tech.join(' · ')}</span>}
-        </p>
-        <div class="prose">{body?.trim() ? <Content /> : <p>{data.description}</p>}</div>
-        {data.images.map((picture) => (
-          <figure>
-            <Image src={picture.src} alt={picture.alt} widths={[400, 700, 1000]} sizes="(max-width: 720px) 100vw, 650px" />
-            {picture.caption && <figcaption>{picture.caption}</figcaption>}
-          </figure>
-        ))}
-        {data.linkedin && (
-          <iframe
-            class="linkedin-embed"
-            src={linkedinEmbed(data.linkedin)}
-            title={`LinkedIn post: ${data.title}`}
-            loading="lazy"
-            allowfullscreen
-          />
-        )}
-        {(data.repo || data.note || data.link || data.linkedin) && (
-          <p class="project-links">
-            {data.repo && <a href={data.repo}>Code</a>}
-            {data.note && <a href={`/notes/${data.note}/`}>Write-up</a>}
-            {data.link && <a href={data.link}>Link</a>}
-            {data.linkedin && <a href={data.linkedin}>LinkedIn post</a>}
-          </p>
-        )}
-      </article>
-    ))
-  }
+<Base title="Projects" description="Things I have built." bare>
+  <h1 class="page-title"><span class="tape">Projects</span></h1>
+  <div class="project-stack">
+    {
+      projects.map(({ id, data, body, Content }) => (
+        <article class="slip project" id={id}>
+          <span class="kicker">{data.year}</span>
+          <h2>
+            {data.title}
+            {data.draft && <span class="draft">draft</span>}
+          </h2>
+          {data.tech.length > 0 && (
+            <ul class="chips" aria-label="Technologies">
+              {data.tech.map((tech) => (
+                <li class="chip">{tech}</li>
+              ))}
+            </ul>
+          )}
+          <div class="prose">{body?.trim() ? <Content /> : <p>{data.description}</p>}</div>
+          {data.images.map((picture) => (
+            <figure>
+              <Image
+                src={picture.src}
+                alt={picture.alt}
+                widths={[400, 700, 1000]}
+                sizes="(max-width: 46rem) 100vw, 42rem"
+              />
+              {picture.caption && <figcaption>{picture.caption}</figcaption>}
+            </figure>
+          ))}
+          {data.linkedin && (
+            <iframe
+              class="linkedin-embed"
+              src={linkedinEmbed(data.linkedin)}
+              title={`LinkedIn post: ${data.title}`}
+              loading="lazy"
+              allowfullscreen
+            />
+          )}
+          {(data.repo || data.note || data.link || data.linkedin) && (
+            <p class="project-links">
+              {data.repo && <a class="btn btn-tape btn-sm" href={data.repo}>Code ↗</a>}
+              {data.note && <a class="btn btn-paper btn-sm" href={`/notes/${data.note}/`}>Write-up →</a>}
+              {data.link && <a class="btn btn-paper btn-sm" href={data.link}>Link ↗</a>}
+              {data.linkedin && <a class="btn btn-paper btn-sm" href={data.linkedin}>LinkedIn post ↗</a>}
+            </p>
+          )}
+        </article>
+      ))
+    }
+  </div>
 </Base>

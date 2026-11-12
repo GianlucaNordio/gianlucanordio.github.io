@@ -27,20 +27,20 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.fontsource(),
-      name: 'Source Serif 4',
+      name: 'Fraunces',
       cssVariable: '--font-body',
-      // Regular for text, semibold for headings and bold. Separate small
-      // files load faster than the single variable font (about 120 kB).
-      weights: [400, 600],
+      // Light for large ledes, regular for text, semibold for headings.
+      weights: [300, 400, 600],
       styles: ['normal', 'italic'],
       subsets: ['latin'],
       fallbacks: ['Georgia', 'serif'],
     },
     {
       provider: fontProviders.fontsource(),
-      name: 'JetBrains Mono',
+      // Labels, the yellow "tape", navigation and code.
+      name: 'IBM Plex Mono',
       cssVariable: '--font-mono',
-      weights: [400, 700],
+      weights: [400, 500, 700],
       styles: ['normal', 'italic'],
       subsets: ['latin'],
       fallbacks: ['ui-monospace', 'monospace'],

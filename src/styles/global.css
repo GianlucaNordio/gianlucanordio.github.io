@@ -1,31 +1,40 @@
-/* The only stylesheet of the site. Sections:
-   1. Variables   2. Page   3. Header and footer   4. Note lists
-   5. Headings and links   6. Note content   7. Utilities */
+/* The only stylesheet of the site. The look: paper slips and yellow tape
+   labels on a grainy sky, in the spirit of a collage. Sections:
+   1. Variables   2. Sky and page   3. Tape, chips and buttons
+   4. Top bar and footer   5. Slips   6. Home   7. Lists, projects, CV
+   8. Note content   9. Utilities */
 
 /* 1. Variables ------------------------------------------------------------ */
 
 :root {
   color-scheme: light dark;
 
-  /* Colours, each written as light-dark(light value, dark value): text,
-     background and a single grey for secondary text and rules.
-     Dark mode is the exact inversion. */
-  --bg: light-dark(#fff, #111);
-  --text: light-dark(#111, #fff);
-  --grey: light-dark(#707070, #8f8f8f);
+  /* Colours, each written as light-dark(day value, night value).
+     The sky is the page background; text sits on paper slips. */
+  --sky-top: light-dark(#f6e6ef, #0b1030);
+  --sky-mid: light-dark(#8fd0f2, #141c45);
+  --sky-low: light-dark(#0aa2e4, #24336f);
+  --cloud: light-dark(rgba(255, 255, 255, 0.85), rgba(150, 170, 255, 0.12));
+  --paper: light-dark(#fbf8ef, #1b2045);
+  --paper-2: light-dark(#eee8d6, #262c5a); /* chips, code background */
+  --text: light-dark(#2a2c31, #ece8dc);
+  --grey: light-dark(#66676c, #a6aac2); /* secondary text and rules, AA on paper */
+  --tape: #ffee00; /* always yellow, always with --ink on it */
+  --ink: #0d0e10;
+  --sky-ink: light-dark(#0b6fb8, #8fd0f2); /* small accents on paper */
+  --shadow: light-dark(rgba(8, 40, 80, 0.28), rgba(0, 0, 0, 0.55));
 
-  /* Fonts. --font-body and --font-mono are defined in astro.config.mjs. */
+  /* Fonts, defined in astro.config.mjs. */
   --serif: var(--font-body);
   --mono: var(--font-mono);
 
-  /* Sizes. The measure is in em, so it scales with the body size. */
-  --body-size: 1.1875rem; /* 19px */
-  --small-size: 0.8125rem; /* 13px, for monospace details */
-  --measure: 30em; /* about 65 characters per line */
+  --body-size: 1.125rem; /* 18px */
+  --small-size: 0.8125rem; /* 13px, labels */
+  --measure: 38rem; /* reading width of a slip */
+  --gut: max(16px, 3vw);
 }
 
-/* `color-scheme: light dark` above follows the system setting. The switch
-   in the header sets data-theme on <html> to force one of the two. */
+/* The switch in the top bar sets data-theme on <html> to force one mode. */
 :root[data-theme='light'] {
   color-scheme: light;
 }
@@ -36,11 +45,11 @@
 
 @media (max-width: 40em) {
   :root {
-    --body-size: 1.125rem; /* 18px */
+    --body-size: 1.0625rem;
   }
 }
 
-/* 2. Page ----------------------------------------------------------------- */
+/* 2. Sky and page --------------------------------------------------------- */
 
 *,
 *::before,
@@ -51,66 +60,231 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  background: var(--sky-low);
 }
 
 body {
-  max-width: var(--measure);
-  margin: 0 auto;
-  padding: 0 1.25rem;
-  box-sizing: content-box;
-  background: var(--bg);
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
   color: var(--text);
   font-family: var(--serif);
   font-size: var(--body-size);
   line-height: 1.6;
   font-kerning: normal;
+  overflow-x: hidden;
+  /* Clouds over a vertical sky gradient, fixed while the page scrolls. */
+  background:
+    radial-gradient(60vmax 30vmax at 12% 8%, var(--cloud), transparent 70%),
+    radial-gradient(50vmax 22vmax at 85% 30%, var(--cloud), transparent 70%),
+    radial-gradient(70vmax 30vmax at 30% 75%, var(--cloud), transparent 70%),
+    linear-gradient(170deg, var(--sky-top) 0%, var(--sky-mid) 45%, var(--sky-low) 100%);
+  background-attachment: fixed;
+}
+
+@supports (overflow: clip) {
+  html {
+    overflow-x: hidden;
+  }
+
+  body {
+    overflow-x: clip;
+  }
+}
+
+/* Film grain over the sky: an SVG noise texture, drawn once. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.22;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+.page {
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1rem var(--gut) 4rem;
 }
 
 ::selection {
-  background: var(--text);
-  color: var(--bg);
+  background: var(--tape);
+  color: var(--ink);
 }
 
 :focus-visible {
-  outline: 2px solid var(--text);
-  outline-offset: 2px;
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--tape);
 }
 
-/* 3. Header and footer ---------------------------------------------------- */
+/* 3. Tape, chips and buttons ---------------------------------------------- */
 
-.site-header,
-.site-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 1.5rem;
+/* Yellow tape: a monospace label stuck on the page. Wraps line by line. */
+.tape {
+  background: var(--tape);
+  color: var(--ink);
   font-family: var(--mono);
-  font-size: var(--small-size);
-}
-
-.site-header {
-  padding: 2.5rem 0;
-  margin-bottom: 1.5rem;
-}
-
-.site-header a,
-.site-footer a {
-  display: inline-block;
-  padding: 0.35rem 0;
-}
-
-.site-title {
-  margin-right: auto;
   font-weight: 700;
+  padding: 0.1em 0.38em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
   text-decoration: none;
 }
 
-/* The light/dark switch: a thin box with two cells, the active one filled.
-   light-dark(a, b) is `a` in light mode and `b` in dark mode, so the filled
-   cell always matches the colours on screen. */
+.chip {
+  display: inline-block;
+  padding: 0.55em 0.7em;
+  background: var(--paper-2);
+  color: var(--text);
+  font: 500 var(--small-size) / 1 var(--mono);
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+a.chip:hover {
+  background: var(--tape);
+  color: var(--ink);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.95em 1.25em;
+  border: 0;
+  color: var(--ink);
+  font: 700 0.95rem / 1 var(--mono);
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 6px 0 -2px rgba(13, 14, 16, 0.9);
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 -2px rgba(13, 14, 16, 0.9);
+}
+
+.btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 3px 0 -2px rgba(13, 14, 16, 0.9);
+}
+
+.btn-tape {
+  background: var(--tape);
+}
+
+.btn-paper {
+  background: #fbf8ef;
+}
+
+.btn-sm {
+  padding: 0.7em 0.9em;
+  font-size: 0.8rem;
+}
+
+.kicker {
+  display: inline-block;
+  margin: 0 0 1.2rem;
+  padding: 0.55em 0.7em;
+  background: var(--ink);
+  color: #fbf8ef;
+  font: 500 0.75rem / 1 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* 4. Top bar and footer --------------------------------------------------- */
+
+.skip {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 10;
+  padding: 0.6em 0.8em;
+}
+
+.skip:focus {
+  top: 1rem;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  flex-wrap: wrap;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 14px var(--gut);
+  font-family: var(--mono);
+}
+
+.topbar-brand {
+  margin-right: auto;
+  padding: 0.3em 0.55em;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.topbar nav {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.topbar nav a:not(.btn) {
+  padding: 0.5em 0.65em;
+  color: var(--ink);
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+
+:root[data-theme='dark'] .topbar nav a:not(.btn) {
+  color: #fbf8ef;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .topbar nav a:not(.btn) {
+    color: #fbf8ef;
+  }
+}
+
+.topbar nav a:not(.btn):hover,
+.topbar nav a[aria-current='page']:not(.btn) {
+  background: #fbf8ef;
+  color: var(--ink);
+}
+
+/* The light/dark switch: two cells, the active one filled with tape. */
 .theme-toggle {
   display: flex;
-  border: 1px solid var(--text);
+  box-shadow: 0 4px 0 -1px var(--ink);
 }
 
 .theme-toggle[hidden] {
@@ -118,85 +292,364 @@ body {
 }
 
 .theme-toggle button {
-  padding: 0.15rem 0.55rem;
+  padding: 0.45em 0.6em;
   border: 0;
-  font: inherit;
+  background: #fbf8ef;
+  color: var(--ink);
+  font: 500 0.78rem / 1 var(--mono);
   cursor: pointer;
 }
 
-.theme-toggle [data-theme-choice='light'] {
-  background: light-dark(var(--text), transparent);
-  color: light-dark(var(--bg), var(--text));
-}
-
-.theme-toggle [data-theme-choice='dark'] {
-  background: light-dark(transparent, var(--text));
-  color: light-dark(var(--text), var(--bg));
-}
-
 .theme-toggle [aria-pressed='true'] {
+  background: var(--tape);
+  font-weight: 700;
   cursor: default;
 }
 
 .theme-toggle [aria-pressed='false']:hover {
   text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.18em;
 }
 
-.site-header nav {
-  display: flex;
-  gap: 1.5rem;
-}
-
-/* On phones the header takes two lines: name and switch, then the menu. */
+/* On phones: name and switch on the first line, the menu below. */
 @media (max-width: 40em) {
-  .site-header {
-    flex-wrap: wrap;
-    row-gap: 0.25rem;
-    padding: 1.5rem 0;
-  }
-
-  .site-header nav {
+  .topbar nav {
     order: 1;
     flex-basis: 100%;
   }
 }
 
 .site-footer {
-  margin-top: 5rem;
-  padding: 1rem 0 2.5rem;
-  border-top: 1px solid var(--grey);
-  color: var(--grey);
-}
-
-/* 4. Lists of notes and projects ------------------------------------------ */
-
-.intro {
-  margin-bottom: 3rem;
-}
-
-/* Home page sections: a small heading with an "All ..." link on its right. */
-.home-section {
-  margin-top: 3rem;
-}
-
-.section-head {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 1.5rem;
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--grey);
-  font-family: var(--mono);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2rem var(--gut) 3rem;
   font-size: var(--small-size);
 }
 
-.section-head h2 {
+.site-footer .tape {
+  margin-right: auto;
+  padding: 0.5em 0.7em;
+  font-weight: 500;
+}
+
+/* 5. Slips ---------------------------------------------------------------- */
+
+/* A slip of paper on the sky. --tilt rotates it slightly. */
+.slip {
+  position: relative;
+  max-width: var(--measure);
+  padding: clamp(1.25rem, 3vw, 2.25rem) clamp(1.25rem, 3.4vw, 2.6rem);
+  background: var(--paper);
+  color: var(--text);
+  box-shadow:
+    0 30px 60px -30px var(--shadow),
+    0 2px 0 rgba(0, 0, 0, 0.04);
+  transform: rotate(var(--tilt, 0deg));
+}
+
+.slip > :last-child {
+  margin-bottom: 0;
+}
+
+/* A slip for reading: no tilt, centred. */
+.slip-read {
+  margin: 2rem auto 0;
+  max-width: calc(var(--measure) + 5rem);
+}
+
+/* A kicker pinned on the top edge of a slip. */
+.slip > .kicker:first-child {
+  position: absolute;
+  top: 0;
+  left: clamp(1.25rem, 3.4vw, 2.6rem);
   margin: 0;
-  font: inherit;
+  transform: translateY(-55%);
+}
+
+.slip-lede {
+  font-size: clamp(1.15rem, 1.9vw, 1.42rem);
+  font-weight: 300;
+  line-height: 1.45;
+}
+
+.slip-lede::first-letter {
+  margin-right: 0.04em;
+  padding: 0 0.12em;
+  background: var(--tape);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+/* A photo on a slip, like a print with a white border. */
+.photo {
+  padding: 0.6rem 0.6rem 0;
+  max-width: 24rem;
+}
+
+.photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.photo figcaption {
+  margin: 0;
+  padding: 0.7rem 0.1rem 0.8rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .lift {
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .lift:hover {
+    transform: rotate(0deg) translateY(-4px);
+  }
+}
+
+/* 6. Home ----------------------------------------------------------------- */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  grid-template-areas:
+    'title photo'
+    'stack photo'
+    'deck  photo';
+  align-items: start;
+  gap: 1.5rem clamp(1.5rem, 5vw, 4rem);
+  padding: clamp(2rem, 8vh, 5rem) 0 3rem;
+}
+
+.hero-title {
+  grid-area: title;
+  margin: 0;
+  font-weight: 700;
+}
+
+.hero-title .tape {
+  display: inline-block;
+  padding: 0.06em 0.28em 0.02em;
+  font-size: clamp(2.6rem, 8.4vw, 6.6rem);
+  line-height: 1.05;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+
+.hero-title .tape + .tape {
+  margin-left: clamp(1rem, 6vw, 5rem);
+}
+
+.hero-stack {
+  grid-area: stack;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.hero-stack .tape {
+  display: inline-block;
+  padding: 0.55em 1.3em 0.55em 0.6em;
+  font-size: clamp(1.05rem, 2vw, 1.6rem);
+  line-height: 1.55;
+}
+
+.hero-stack .credit {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.hero-stack .credit .tape {
+  padding: 0.3em 0.55em 0.2em;
+  line-height: 1.3;
+}
+
+.hero-stack .credit small {
+  margin-top: -1px;
+  padding: 0.3em 0.7em 0.45em;
+  background: var(--tape);
+  color: var(--ink);
+  font: 500 clamp(0.72rem, 1.1vw, 0.9rem) / 1.3 var(--mono);
+}
+
+.hero-deck {
+  grid-area: deck;
+  --tilt: -0.5deg;
+  max-width: 34rem;
+}
+
+.hero-deck p {
+  margin: 0 0 1.2rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.hero-photo {
+  grid-area: photo;
+  --tilt: 2deg;
+  justify-self: center;
+  margin: 1rem 0 0;
+}
+
+@media (max-width: 50em) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'title' 'stack' 'photo' 'deck';
+  }
+
+  .hero-photo {
+    max-width: 18rem;
+  }
+}
+
+.section {
+  margin: 5rem 0;
+}
+
+.section-title {
+  margin: 0 0 2rem;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  line-height: 1.15;
+}
+
+.section-title .tape {
+  padding: 0.06em 0.3em 0.02em;
+}
+
+.section-title + .section-note {
+  margin: -1.2rem 0 2rem;
+}
+
+.section-note {
+  display: inline-block;
+  padding: 0.4em 0.6em;
+  background: #fbf8ef;
+  color: var(--ink);
+  font: 500 var(--small-size) / 1.4 var(--mono);
+}
+
+/* Slips laid out in a loose grid, each at its own small angle. */
+.slip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  gap: 2.5rem 2rem;
+  align-items: start;
+}
+
+.slip-grid > :nth-child(3n + 1) {
+  --tilt: -0.8deg;
+}
+
+.slip-grid > :nth-child(3n + 2) {
+  --tilt: 0.6deg;
+  margin-top: 1.5rem;
+}
+
+.slip-grid > :nth-child(3n) {
+  --tilt: -0.3deg;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.6rem 0.6rem 1.2rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 0.4rem 0.8rem 0;
+}
+
+.card h3 {
+  margin: 0.2rem 0 0.4rem;
+  font-size: 1.15rem;
+  line-height: 1.3;
+}
+
+.card p {
+  margin: 0;
+  font-size: 0.95rem;
   color: var(--grey);
+}
+
+a.card:hover h3 {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.card .year {
+  font: 500 var(--small-size) / 1 var(--mono);
+  color: var(--sky-ink);
+  letter-spacing: 0.06em;
+}
+
+/* Photos from outside work, scattered. */
+.photo-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.photo-row .photo {
+  flex: 1 1 14rem;
+  max-width: 17rem;
+}
+
+.photo-row .photo img {
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+.photo-row .photo:nth-child(1) {
+  --tilt: -2.2deg;
+}
+
+.photo-row .photo:nth-child(2) {
+  --tilt: 1.4deg;
+  margin-top: 2rem;
+}
+
+.photo-row .photo:nth-child(3) {
+  --tilt: -0.8deg;
+}
+
+/* 7. Lists, projects, CV -------------------------------------------------- */
+
+.page-title {
+  margin: 2rem 0 2.5rem;
+  font-size: clamp(2rem, 5.4vw, 4rem);
+  line-height: 1.15;
+}
+
+.page-title .tape {
+  display: inline-block;
+  padding: 0.06em 0.3em 0.02em;
+}
+
+.slip-read h1 {
+  margin: 0 0 1.5rem;
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
 }
 
 .year h2,
@@ -204,14 +657,8 @@ body {
   margin: 2.25rem 0 0.5rem;
   font-family: var(--mono);
   font-size: var(--small-size);
-  font-weight: 400;
+  font-weight: 500;
   color: var(--grey);
-}
-
-.tag-title {
-  margin-top: 0;
-  font-size: 1rem;
-  color: var(--text);
 }
 
 .note-list {
@@ -224,40 +671,12 @@ body {
   display: flex;
   align-items: baseline;
   gap: 1.5rem;
-  padding: 0.3rem 0;
+  padding: 0.45rem 0;
+  border-bottom: 1px dashed color-mix(in srgb, var(--grey) 45%, transparent);
 }
 
 .note-list time {
   flex: none;
-}
-
-/* One-line description under a project title on the home page. */
-.summary {
-  display: block;
-  font-size: 0.88em;
-  color: var(--grey);
-}
-
-/* Projects page */
-
-.project {
-  margin-top: 3.5rem;
-  scroll-margin-top: 1.5rem;
-}
-
-.project h2 {
-  margin: 0 0 0.4em;
-}
-
-.project .meta {
-  margin-bottom: 1.2rem;
-}
-
-.project-links {
-  display: flex;
-  gap: 1.5em;
-  font-family: var(--mono);
-  font-size: var(--small-size);
 }
 
 time,
@@ -272,10 +691,152 @@ time,
 .draft {
   margin-left: 0.5em;
   padding: 0 0.4em;
-  border: 1px solid var(--grey);
+  background: var(--tape);
+  color: var(--ink);
 }
 
-/* 5. Headings and links --------------------------------------------------- */
+/* Projects page: one slip per project, alternating angles. */
+.project-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.project {
+  max-width: 46rem;
+  scroll-margin-top: 2rem;
+}
+
+.project:nth-child(odd) {
+  --tilt: -0.35deg;
+}
+
+.project:nth-child(even) {
+  --tilt: 0.35deg;
+  margin-left: auto;
+}
+
+.project h2 {
+  margin: 0.4rem 0 0.6rem;
+  font-size: clamp(1.35rem, 3vw, 1.8rem);
+}
+
+.project .chips {
+  margin-bottom: 1.2rem;
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.project figure {
+  margin: 1.5rem 0;
+}
+
+/* CV page */
+.cv-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 17rem);
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.cv-side {
+  position: sticky;
+  top: 2rem;
+}
+
+.cv-side .photo {
+  --tilt: 1.8deg;
+}
+
+@media (max-width: 50em) {
+  .cv-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cv-side {
+    position: static;
+    order: -1;
+  }
+
+  .cv-side .photo {
+    max-width: 15rem;
+  }
+}
+
+.cv-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.cv-entry + .cv-entry {
+  margin-top: 1.6rem;
+  padding-top: 1.4rem;
+  border-top: 1px dashed color-mix(in srgb, var(--grey) 45%, transparent);
+}
+
+.cv-entry h3 {
+  margin: 0 0 0.15em;
+  font-size: 1.1rem;
+}
+
+.cv-entry .meta {
+  margin: 0 0 0.5em;
+  color: var(--sky-ink);
+}
+
+.cv-entry ul {
+  margin: 0;
+}
+
+.cv-entry p {
+  margin: 0;
+}
+
+/* About page */
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: start;
+  margin-top: 1rem;
+}
+
+.about .photo {
+  --tilt: -2deg;
+}
+
+.about .slip:not(.photo) {
+  --tilt: 0.3deg;
+}
+
+@media (max-width: 45em) {
+  .about {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .about .photo {
+    max-width: 14rem;
+  }
+}
+
+/* A LinkedIn post embedded on /projects/, with its photos and video. */
+.linkedin-embed {
+  display: block;
+  width: 100%;
+  max-width: 504px;
+  height: 640px;
+  margin: 1.5rem 0 0;
+  border: 0;
+  background: #fff;
+}
+
+/* 8. Note content --------------------------------------------------------- */
 
 h1,
 h2,
@@ -287,18 +848,12 @@ h4 {
   text-wrap: balance;
 }
 
-h1 {
-  margin-top: 0;
-  font-size: 1.7em;
-  letter-spacing: -0.01em;
-}
-
 h2 {
-  font-size: 1.3em;
+  font-size: 1.35em;
 }
 
 h3 {
-  font-size: 1.1em;
+  font-size: 1.12em;
 }
 
 h4 {
@@ -316,7 +871,11 @@ a:hover {
   text-decoration-thickness: 2px;
 }
 
-/* 6. Note content --------------------------------------------------------- */
+.prose a:hover,
+.slip-read a:not(.chip, .btn):hover {
+  background: var(--tape);
+  color: var(--ink);
+}
 
 .note-header {
   margin-bottom: 2.5rem;
@@ -352,8 +911,6 @@ b {
   font-weight: 600;
 }
 
-/* Lists */
-
 ul,
 ol {
   padding-left: 1.4em;
@@ -385,13 +942,11 @@ li > ol {
   background: var(--text);
 }
 
-/* Blockquotes and rules */
-
 blockquote {
   margin-left: 0;
   margin-right: 0;
-  padding-left: 1.2em;
-  border-left: 1px solid var(--grey);
+  padding: 0.2em 0 0.2em 1.2em;
+  border-left: 4px solid var(--tape);
 }
 
 blockquote > :last-child {
@@ -401,10 +956,8 @@ blockquote > :last-child {
 hr {
   margin: 2.5em 0;
   border: 0;
-  border-top: 1px solid var(--grey);
+  border-top: 1px dashed var(--grey);
 }
-
-/* Code */
 
 code,
 kbd,
@@ -418,9 +971,14 @@ kbd {
   font-size: 0.84em;
 }
 
+:not(pre) > code {
+  padding: 0.05em 0.3em;
+  background: var(--paper-2);
+}
+
 pre {
   padding: 0.9em 1.1em;
-  border: 1px solid var(--grey);
+  background: var(--paper-2);
   overflow-x: auto;
   font-size: 0.75em;
   line-height: 1.55;
@@ -430,8 +988,6 @@ pre {
 pre code {
   font-size: inherit;
 }
-
-/* Tables */
 
 table {
   display: block;
@@ -456,7 +1012,6 @@ td:last-child {
   padding-right: 0;
 }
 
-/* Column alignment set in Markdown with :--- / :---: / ---: */
 [align='center'] {
   text-align: center;
 }
@@ -475,11 +1030,9 @@ tbody tr:last-child td {
   border-bottom-color: var(--text);
 }
 
-/* Images. `![alt](file.png "Caption")` becomes a figure with a caption. */
-
 img {
   display: block;
-  width: 100%;
+  max-width: 100%;
   height: auto;
 }
 
@@ -495,8 +1048,6 @@ figcaption {
   color: var(--grey);
 }
 
-/* Math */
-
 .katex {
   font-size: 1.08em;
 }
@@ -507,8 +1058,6 @@ figcaption {
   overflow-x: auto;
   overflow-y: hidden;
 }
-
-/* Footnotes */
 
 sup {
   font-size: 0.7em;
@@ -529,13 +1078,12 @@ sup a:hover,
 .footnotes {
   margin-top: 3.5em;
   padding-top: 1.2em;
-  border-top: 1px solid var(--grey);
+  border-top: 1px dashed var(--grey);
   font-size: 0.88em;
 }
 
-/* 7. Utilities ------------------------------------------------------------ */
+/* 9. Utilities ------------------------------------------------------------ */
 
-/* Hidden visually, still read by screen readers. */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -548,21 +1096,13 @@ sup a:hover,
   border: 0;
 }
 
-/* CV page */
-.cv-entry h3 {
-  margin-bottom: 0.1em;
+/* On a slip, a paper button needs its own shade to be seen. */
+.slip .btn-paper {
+  background: var(--paper-2);
+  color: var(--text);
 }
 
-.cv-entry .meta {
-  margin: 0 0 0.5em;
-}
-
-/* A LinkedIn post embedded on /projects/, with its photos and video. */
-.linkedin-embed {
-  display: block;
-  width: 100%;
-  max-width: 504px;
-  height: 640px;
-  margin: 1.2rem 0;
-  border: 1px solid var(--grey);
+/* Offset slips: pushed to the right edge, for a collage rhythm. */
+.slip-right {
+  margin-left: auto;
 }

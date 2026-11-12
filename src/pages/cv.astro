@@ -1,7 +1,9 @@
 ---
 // /cv/: a short CV that reads well on a phone, with the full PDF linked.
 // Keep it in step with the PDF in public/gianluca-nordio-cv.pdf.
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import graduation from '../assets/photos/graduation-2023.jpg';
 
 const pdf = '/gianluca-nordio-cv.pdf';
 
@@ -91,39 +93,55 @@ const sections = [
 ];
 ---
 
-<Base title="CV" description="CV of Gianluca Nordio, robotics software engineer.">
-  <h1>CV</h1>
-  <p class="project-links"><a href={pdf}>Download the PDF</a></p>
-  {
-    sections.map((section) => (
-      <section>
-        <h2>{section.title}</h2>
-        {section.entries.map((entry) => (
-          <article class="cv-entry">
-            <h3>
-              {entry.role}, {entry.org}
-            </h3>
-            <p class="meta">{entry.dates}</p>
-            <ul>
-              {entry.items.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-          </article>
-        ))}
+<Base title="CV" description="CV of Gianluca Nordio, robotics software engineer." bare>
+  <h1 class="page-title"><span class="tape">CV</span></h1>
+  <div class="cv-layout">
+    <div class="cv-sections">
+      {
+        sections.map((section, i) => (
+          <section class="slip" style={`--tilt: ${i % 2 ? 0.3 : -0.3}deg`}>
+            <span class="kicker">{section.title}</span>
+            <h2 class="sr-only">{section.title}</h2>
+            {section.entries.map((entry) => (
+              <article class="cv-entry">
+                <h3>
+                  {entry.role}, {entry.org}
+                </h3>
+                <p class="meta">{entry.dates}</p>
+                <ul>
+                  {entry.items.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </section>
+        ))
+      }
+      <section class="slip" style="--tilt: -0.2deg">
+        <span class="kicker">Projects</span>
+        <h2 class="sr-only">Projects</h2>
+        {
+          projects.map((project) => (
+            <article class="cv-entry">
+              <h3>{project.title}</h3>
+              <p>{project.text}</p>
+            </article>
+          ))
+        }
+        <p class="project-links">
+          <a class="btn btn-paper btn-sm" href="/projects/">All projects →</a>
+        </p>
       </section>
-    ))
-  }
-  <section>
-    <h2>Projects</h2>
-    {
-      projects.map((project) => (
-        <article class="cv-entry">
-          <h3>{project.title}</h3>
-          <p>{project.text}</p>
-        </article>
-      ))
-    }
-    <p class="project-links"><a href="/projects/">All projects</a></p>
-  </section>
+    </div>
+    <aside class="cv-side">
+      <figure class="slip photo">
+        <Image src={graduation} alt="Gianluca in a suit with a laurel wreath, holding a red bound book." widths={[300, 500]} sizes="17rem" />
+        <figcaption>Bachelor's graduation, University of Padua, 2023.</figcaption>
+      </figure>
+      <p class="actions" style="margin-top: 2rem">
+        <a class="btn btn-tape" href={pdf}>Download the PDF ↓</a>
+      </p>
+    </aside>
+  </div>
 </Base>
