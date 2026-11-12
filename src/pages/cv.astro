@@ -73,6 +73,18 @@ const education = [
   },
 ];
 
+const projects = [
+  {
+    title: '{Tech: Europe} Paris hackathon winner',
+    text: 'HireMind, an AI agent that conducts behavioural interviews. 1st in the MakiPeople track, 2nd overall among 30+ teams.',
+  },
+  { title: 'Robust AMR localization', text: 'M.Sc. thesis: a 2D-lidar map updater that keeps AMCL reliable in changing warehouses.' },
+  { title: 'SLAM with a marine surface vehicle and a Turtlebot3', text: 'ROS 2, C++, Python.' },
+  { title: 'Robotic arm following a drawn line', text: 'Camera calibration, kinematics and trajectories. Python, OpenCV.' },
+  { title: 'Parking space occupancy', text: 'Classical computer vision in C++ and OpenCV.' },
+  { title: 'OpenCV contributor', text: 'A merged fix to the minAreaRect and boxPoints documentation.' },
+];
+
 const sections = [
   { title: 'Experience', entries: experience },
   { title: 'Education', entries: education },
@@ -102,4 +114,16 @@ const sections = [
       </section>
     ))
   }
+  <section>
+    <h2>Projects</h2>
+    {
+      projects.map((project) => (
+        <article class="cv-entry">
+          <h3>{project.title}</h3>
+          <p>{project.text}</p>
+        </article>
+      ))
+    }
+    <p class="project-links"><a href="/projects/">All projects</a></p>
+  </section>
 </Base>
