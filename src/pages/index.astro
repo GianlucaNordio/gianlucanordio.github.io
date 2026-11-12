@@ -1,16 +1,13 @@
 ---
 // Home: the hero, what I am working on, featured projects, life outside
-// work, recent notes and how to reach me.
+// work and how to reach me.
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import NoteList from '../components/NoteList.astro';
-import { SITE, getNotes, getProjects } from '../site.js';
+import { getProjects } from '../site.js';
 import portrait from '../assets/photos/portrait-drone.jpg';
 import swim from '../assets/photos/swim.jpg';
 import bikeAutumn from '../assets/photos/bike-autumn.jpg';
 import bikeRide from '../assets/photos/bike-ride.jpg';
-
-const notes = (await getNotes()).slice(0, 5);
 
 // Projects marked `featured: true`; if none is, the three most recent.
 const projects = await getProjects();
@@ -121,19 +118,6 @@ const outside = [
       }
     </div>
   </section>
-
-  {
-    notes.length > 0 && (
-      <section class="section" aria-labelledby="notes-title">
-        <h2 class="section-title" id="notes-title">
-          <span class="tape">Recent notes</span>
-        </h2>
-        <div class="slip">
-          <NoteList notes={notes} byYear={false} />
-        </div>
-      </section>
-    )
-  }
 
   <section class="section" aria-labelledby="contact-title">
     <div class="slip" style="--tilt: -0.4deg">

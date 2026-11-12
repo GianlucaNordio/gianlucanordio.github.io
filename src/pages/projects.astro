@@ -58,10 +58,9 @@ const projects = await Promise.all(
               allowfullscreen
             />
           )}
-          {(data.repo || data.note || data.link || data.linkedin) && (
+          {(data.repo || data.link || data.linkedin) && (
             <p class="project-links">
               {data.repo && <a class="btn btn-tape btn-sm" href={data.repo}>Code ↗</a>}
-              {data.note && <a class="btn btn-paper btn-sm" href={`/notes/${data.note}/`}>Write-up →</a>}
               {data.link && <a class="btn btn-paper btn-sm" href={data.link}>Link ↗</a>}
               {data.linkedin && <a class="btn btn-paper btn-sm" href={data.linkedin}>LinkedIn post ↗</a>}
             </p>

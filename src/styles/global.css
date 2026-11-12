@@ -1,28 +1,29 @@
-/* The only stylesheet of the site. The look: paper slips and yellow tape
-   labels on a grainy sky, in the spirit of a collage. Sections:
-   1. Variables   2. Sky and page   3. Tape, chips and buttons
+/* The only stylesheet of the site. The look: paper slips and orange tape
+   labels on a blueprint grid, in the spirit of a collage. Sections:
+   1. Variables   2. Background and page   3. Tape, chips and buttons
    4. Top bar and footer   5. Slips   6. Home   7. Lists, projects, CV
    8. Note content   9. Utilities */
 
 /* 1. Variables ------------------------------------------------------------ */
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 
-  /* Colours, each written as light-dark(day value, night value).
-     The sky is the page background; text sits on paper slips. */
-  --sky-top: light-dark(#f6e6ef, #0b1030);
-  --sky-mid: light-dark(#8fd0f2, #141c45);
-  --sky-low: light-dark(#0aa2e4, #24336f);
-  --cloud: light-dark(rgba(255, 255, 255, 0.85), rgba(150, 170, 255, 0.12));
-  --paper: light-dark(#fbf8ef, #1b2045);
-  --paper-2: light-dark(#eee8d6, #262c5a); /* chips, code background */
-  --text: light-dark(#2a2c31, #ece8dc);
-  --grey: light-dark(#66676c, #a6aac2); /* secondary text and rules, AA on paper */
-  --tape: #ffee00; /* always yellow, always with --ink on it */
+  /* Colours. The page background is a sage-to-teal gradient under a faint
+     blueprint grid; text sits on paper slips. */
+  --bg-top: #f1f4ee;
+  --bg-mid: #d4e5de;
+  --bg-low: #8cbcb2;
+  --grid: rgba(16, 92, 84, 0.07);
+  --grid-major: rgba(16, 92, 84, 0.11);
+  --paper: #fffcf5;
+  --paper-2: #efeadf; /* chips, code background */
+  --text: #23262b;
+  --grey: #63656a; /* secondary text and rules, AA on paper */
+  --tape: #ff7a1a; /* safety orange, always with --ink on it */
   --ink: #0d0e10;
-  --sky-ink: light-dark(#0b6fb8, #8fd0f2); /* small accents on paper */
-  --shadow: light-dark(rgba(8, 40, 80, 0.28), rgba(0, 0, 0, 0.55));
+  --accent: #0f6e66; /* small accents on paper: years, dates */
+  --shadow: rgba(16, 60, 56, 0.3);
 
   /* Fonts, defined in astro.config.mjs. */
   --serif: var(--font-body);
@@ -34,22 +35,13 @@
   --gut: max(16px, 3vw);
 }
 
-/* The switch in the top bar sets data-theme on <html> to force one mode. */
-:root[data-theme='light'] {
-  color-scheme: light;
-}
-
-:root[data-theme='dark'] {
-  color-scheme: dark;
-}
-
 @media (max-width: 40em) {
   :root {
     --body-size: 1.0625rem;
   }
 }
 
-/* 2. Sky and page --------------------------------------------------------- */
+/* 2. Background and page --------------------------------------------------------- */
 
 *,
 *::before,
@@ -60,7 +52,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  background: var(--sky-low);
+  background: var(--bg-low);
 }
 
 body {
@@ -73,12 +65,14 @@ body {
   line-height: 1.6;
   font-kerning: normal;
   overflow-x: hidden;
-  /* Clouds over a vertical sky gradient, fixed while the page scrolls. */
+  /* A blueprint grid, minor lines every 24px and major every 120px, over
+     a vertical gradient. Fixed while the page scrolls. */
   background:
-    radial-gradient(60vmax 30vmax at 12% 8%, var(--cloud), transparent 70%),
-    radial-gradient(50vmax 22vmax at 85% 30%, var(--cloud), transparent 70%),
-    radial-gradient(70vmax 30vmax at 30% 75%, var(--cloud), transparent 70%),
-    linear-gradient(170deg, var(--sky-top) 0%, var(--sky-mid) 45%, var(--sky-low) 100%);
+    linear-gradient(var(--grid-major) 1px, transparent 1px) 0 0 / 120px 120px,
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px) 0 0 / 120px 120px,
+    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(170deg, var(--bg-top) 0%, var(--bg-mid) 50%, var(--bg-low) 100%);
   background-attachment: fixed;
 }
 
@@ -90,18 +84,6 @@ body {
   body {
     overflow-x: clip;
   }
-}
-
-/* Film grain over the sky: an SVG noise texture, drawn once. */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.22;
-  mix-blend-mode: soft-light;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 body > * {
@@ -129,7 +111,7 @@ body > * {
 
 /* 3. Tape, chips and buttons ---------------------------------------------- */
 
-/* Yellow tape: a monospace label stuck on the page. Wraps line by line. */
+/* Orange tape: a monospace label stuck on the page. Wraps line by line. */
 .tape {
   background: var(--tape);
   color: var(--ink);
@@ -196,7 +178,7 @@ a.chip:hover {
 }
 
 .btn-paper {
-  background: #fbf8ef;
+  background: var(--paper);
 }
 
 .btn-sm {
@@ -209,7 +191,7 @@ a.chip:hover {
   margin: 0 0 1.2rem;
   padding: 0.55em 0.7em;
   background: var(--ink);
-  color: #fbf8ef;
+  color: var(--paper);
   font: 500 0.75rem / 1 var(--mono);
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -265,52 +247,13 @@ a.chip:hover {
     transform 0.2s;
 }
 
-:root[data-theme='dark'] .topbar nav a:not(.btn) {
-  color: #fbf8ef;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .topbar nav a:not(.btn) {
-    color: #fbf8ef;
-  }
-}
-
 .topbar nav a:not(.btn):hover,
 .topbar nav a[aria-current='page']:not(.btn) {
-  background: #fbf8ef;
+  background: var(--paper);
   color: var(--ink);
 }
 
-/* The light/dark switch: two cells, the active one filled with tape. */
-.theme-toggle {
-  display: flex;
-  box-shadow: 0 4px 0 -1px var(--ink);
-}
-
-.theme-toggle[hidden] {
-  display: none;
-}
-
-.theme-toggle button {
-  padding: 0.45em 0.6em;
-  border: 0;
-  background: #fbf8ef;
-  color: var(--ink);
-  font: 500 0.78rem / 1 var(--mono);
-  cursor: pointer;
-}
-
-.theme-toggle [aria-pressed='true'] {
-  background: var(--tape);
-  font-weight: 700;
-  cursor: default;
-}
-
-.theme-toggle [aria-pressed='false']:hover {
-  text-decoration: underline;
-}
-
-/* On phones: name and switch on the first line, the menu below. */
+/* On phones: the name on the first line, the menu below. */
 @media (max-width: 40em) {
   .topbar nav {
     order: 1;
@@ -337,7 +280,7 @@ a.chip:hover {
 
 /* 5. Slips ---------------------------------------------------------------- */
 
-/* A slip of paper on the sky. --tilt rotates it slightly. */
+/* A slip of paper on the grid. --tilt rotates it slightly. */
 .slip {
   position: relative;
   max-width: var(--measure);
@@ -533,7 +476,7 @@ a.chip:hover {
 .section-note {
   display: inline-block;
   padding: 0.4em 0.6em;
-  background: #fbf8ef;
+  background: var(--paper);
   color: var(--ink);
   font: 500 var(--small-size) / 1.4 var(--mono);
 }
@@ -599,7 +542,7 @@ a.card:hover h3 {
 
 .card .year {
   font: 500 var(--small-size) / 1 var(--mono);
-  color: var(--sky-ink);
+  color: var(--accent);
   letter-spacing: 0.06em;
 }
 
@@ -787,7 +730,7 @@ time,
 
 .cv-entry .meta {
   margin: 0 0 0.5em;
-  color: var(--sky-ink);
+  color: var(--accent);
 }
 
 .cv-entry ul {

@@ -1,12 +1,11 @@
 # gianlucanordio.github.io
 
-My personal site: a home page, notes, projects and an about page. Publishing
-a note means adding one Markdown file to `src/content/notes/` and pushing to
-`main`; a project is one Markdown file in `src/content/projects/`.
+My personal site: a home page, projects, a CV and an about page. A project
+is one Markdown file in `src/content/projects/`; pushing to `main` publishes
+the site.
 
 Built with [Astro](https://astro.build) as a fully static site: no UI
-framework, one hand-written CSS file, and no client-side JavaScript apart
-from the few lines behind the light/dark switch.
+framework, one hand-written CSS file and no client-side JavaScript.
 
 ## Quick start
 
@@ -19,43 +18,6 @@ npm run build      # production build into dist/
 npm run preview    # serve dist/ locally, exactly as it will be published
 ```
 
-## Adding a note
-
-```bash
-npm run new "Title of the note"
-```
-
-This creates `src/content/notes/title-of-the-note.md` with today's date. The
-file name is the URL: `title-of-the-note.md` is published at
-`/notes/title-of-the-note/`. You can also create the file by hand.
-
-Every note starts with this frontmatter:
-
-```yaml
----
-title: "Title of the note"   # required
-date: 2026-10-03             # required
-tags: [robotics, ros2]       # optional
-lang: en                     # optional: en (default) or it
-description: "One sentence." # optional: used for meta tags and RSS
-draft: true                  # optional: default false
----
-```
-
-- **draft**: a draft is visible in `npm run dev` (marked "draft") and left out
-  of `npm run build`, so it is never published. `npm run new` creates notes
-  with `draft: true`; delete that line when the note is ready.
-- **lang**: sets the language of the page, which browsers use for hyphenation
-  and screen readers for pronunciation.
-- **tags**: each tag gets a page at `/tags/<tag>/`. Use lowercase words
-  without spaces (`path-planning`, not `Path Planning`), since the tag is
-  used in the URL as written.
-- A typo in the frontmatter (a missing title, a wrong date) fails the build
-  with an error naming the file.
-
-To publish: commit and push to `main`. GitHub Actions builds and deploys the
-site.
-
 ## Adding a project
 
 Create a file in `src/content/projects/`, for example `my-robot.md`:
@@ -64,46 +26,36 @@ Create a file in `src/content/projects/`, for example `my-robot.md`:
 ---
 title: My robot                 # required
 year: 2026                      # required: used for ordering, newest first
-description: One line about it. # required: shown on the home page
-tech: [ROS 2, C++]              # optional
+description: One line about it. # required: shown on the home page cards
+tech: [ROS 2, C++]              # optional: shown as chips
 repo: https://github.com/...    # optional: shown as "Code"
 link: https://...               # optional: demo, paper, video; shown as "Link"
-note: ekf-planar-robot          # optional: file name of a note, shown as "Write-up"
 linkedin: https://www.linkedin.com/posts/...  # optional: embeds the post, with its photos and video
 images:                         # optional: pictures from src/content/projects/images/
   - src: ./images/robot.jpg
     alt: What the picture shows, for screen readers.
     caption: Optional caption.
-featured: true                  # optional: list it on the home page
-draft: true                     # optional: as for notes
+featured: true                  # optional: show it on the home page
+draft: true                     # optional: shown in npm run dev, never published
 ---
 
 One or two paragraphs in Markdown, shown on the projects page.
 ```
 
-All projects appear on `/projects/`. The home page lists the ones marked
-`featured: true`, or the three most recent if none is marked. A project has
-no page of its own: for a long write-up, write a note and point to it with
-`note:`. Math is only set up on note pages, which is one more reason to keep
-project texts short.
+All projects appear on `/projects/`. The home page shows the ones marked
+`featured: true` as cards, with their first picture, or the three most recent
+if none is marked. A typo in the frontmatter fails the build with an error
+naming the file.
 
-## Writing notes
+Pictures are converted to WebP and resized at build time, so a large JPEG is
+fine. Strip location data from phone photos before adding them.
 
-`src/content/notes/style-guide.md` shows every supported element; it is the
-page to look at after changing the design. In short:
+## The CV
 
-| Element   | How to write it                                              |
-| :-------- | :----------------------------------------------------------- |
-| Code      | Fenced block with a language: ` ```python `                  |
-| Math      | `$x^2$` inline, `$$ ... $$` on its own lines for display     |
-| Image     | `![Alt text](./images/plot.png "Optional caption")`          |
-| Footnote  | `Text.[^1]` and, anywhere below, `[^1]: The footnote.`       |
-| Table     | GitHub style; `:---`, `:---:`, `---:` set column alignment   |
-| Task list | `- [x] done` and `- [ ] to do`                               |
-| Dashes    | `--` is an en dash, `---` an em dash, as in LaTeX            |
-
-Put images in `src/content/notes/images/`. They are converted to WebP and
-resized to several widths at build time, so a large PNG is fine.
+`/cv/` is written in `src/pages/cv.astro`, and links the PDF in
+`public/gianluca-nordio-cv.pdf` (the version without phone number). The LaTeX
+sources of the PDF are kept outside the repository. When the CV changes,
+update both.
 
 ## What each file does
 
@@ -113,27 +65,20 @@ package.json                Dependencies and the npm scripts
 .nvmrc                      Node version for nvm
 tsconfig.json               Editor support for Astro files (nothing to edit)
 .github/workflows/deploy.yml  Build and deploy to GitHub Pages on push to main
-scripts/new-note.mjs        The `npm run new` script
 public/                     Copied to the site as is: favicon.svg, robots.txt,
-                            gianluca-nordio-cv.pdf (the CV, without phone number), qr.png
+                            gianluca-nordio-cv.pdf, qr.png (QR code of the site)
 src/
-  content.config.ts         The frontmatter schemas of notes and projects
-  site.js                   Site title and description; getNotes(), getProjects()
-  content/notes/*.md        The notes
-  content/notes/images/     Images used by the notes
+  content.config.ts         The frontmatter schema of projects
+  site.js                   Site title and description; getProjects()
   content/projects/*.md     The projects
-  layouts/Base.astro        The one layout: <head>, header, footer
-  components/NoteList.astro "date  title" rows, grouped by year on /notes/
-  components/ThemeToggle.astro  The light/dark switch in the header
-  pages/index.astro         Home: intro, latest five notes, featured projects
-  pages/notes/index.astro   All notes, grouped by year
-  pages/notes/[id].astro    A note page
+  content/projects/images/  Pictures used by projects
+  assets/photos/            Photos used by the pages (hero, CV, about, outside work)
+  layouts/Base.astro        The one layout: <head>, top bar, footer
+  pages/index.astro         Home: hero, now, featured projects, outside work, contact
   pages/projects.astro      All projects
-  pages/tags/[tag].astro    A tag page
+  pages/cv.astro            CV page
   pages/about.astro         About
-  pages/cv.astro            CV page; keep in step with the PDF in public/
   pages/404.astro           Page not found
-  pages/rss.xml.js          RSS feed at /rss.xml
   plugins/rehype-figure.mjs     Turns an image with a title into figure + caption
   plugins/rehype-task-list.mjs  Names task-list checkboxes for screen readers
   styles/global.css         All the CSS
@@ -143,79 +88,34 @@ src/
 The sitemap (`/sitemap-index.xml`) is generated by the `@astrojs/sitemap`
 integration listed in `astro.config.mjs`.
 
-How a page is built: Astro reads each `.md` file, checks its frontmatter
-against `content.config.ts`, converts the Markdown to HTML (GFM, math via
-KaTeX, code via Shiki, then the two small plugins), and places the result
-inside `Base.astro` through `pages/notes/[id].astro`. Files in `src/pages/`
-map directly to URLs.
-
 ## Changing the design
 
-**Look.** Paper slips and yellow "tape" labels on a grainy sky, in the spirit
-of a collage. A `.slip` is a paper panel (`--tilt` rotates it slightly), a
-`.tape` is a yellow monospace label, `.chip` a small grey label and `.btn` a
-button. Pages are on one reading slip by default; home, projects, CV and
-about pass `bare` to `Base.astro` and arrange their own slips.
+**Look.** Paper slips and orange "tape" labels on a blueprint grid, in the
+spirit of a collage. A `.slip` is a paper panel (`--tilt` rotates it
+slightly), a `.tape` an orange monospace label, a `.chip` a small label and a
+`.btn` a button. The 404 page sits on one reading slip, the default of
+`Base.astro`; the other pages pass `bare` and arrange their own slips.
 
-**Colours.** At the top of `src/styles/global.css`, each written as
-`light-dark(day value, night value)`: the sky gradient, the paper, the text
-and a grey that stays readable on paper (WCAG AA). The tape is always
-`#ffee00` with near-black ink on it.
+**Colours.** At the top of `src/styles/global.css`: the background gradient
+and grid, the paper, the text, a grey that stays readable on paper (WCAG AA)
+and the teal accent. The tape is safety orange `#ff7a1a` with near-black ink
+on it. The site has a light theme only.
 
-**Light and dark mode.** The site follows the system setting. In dark mode the sky turns to night and the
-slips to dark paper. The switch in the header
-(`src/components/ThemeToggle.astro`) overrides it: the choice is
-saved in the browser's localStorage and applied by a short script in the
-`<head>` of `Base.astro` before the page is drawn. Choosing the mode the
-system already asks for clears the saved choice, so the site follows the
-system again. With JavaScript off the switch is not shown.
-
-**Fonts.** In `astro.config.mjs`, change `name` in the `fonts` list to any
-family on [Fontsource](https://fontsource.org), for example:
-
-```js
-name: 'Newsreader',        // was 'Fraunces'
-cssVariable: '--font-body',
-weights: [400, 600],
-```
-
-Astro downloads the files at build time and serves them from this site.
-Nothing else needs to change: the CSS refers to `--font-body` and
-`--font-mono`. List only weights the new family actually has.
+**Fonts.** In `astro.config.mjs`: Fraunces for text and IBM Plex Mono for
+labels, buttons and code. To change one, set `name` to any family on
+[Fontsource](https://fontsource.org) and list only weights it has. Astro
+downloads the files at build time and serves them from this site.
 
 **Sizes.** Also at the top of `global.css`: `--body-size` (18px, 17px on
 phones), `--small-size` (labels) and `--measure` (the width of a slip).
 
-**Photos.** Photos used by pages are in `src/assets/photos/`, project
-pictures in `src/content/projects/images/`. Strip location data from phone
-photos before adding them.
-
-**Code highlighting.** `src/styles/code-theme.mjs` maps kinds of token
-(comment, keyword, string) to bold, italic or grey.
-
-**Site title, intro, about.** The title and description are in `src/site.js`,
-the intro text in `src/pages/index.astro`, the about page in
-`src/pages/about.astro`.
-
 ## Deployment
 
 `.github/workflows/deploy.yml` runs on every push to `main`: it installs the
-dependencies, runs `npm run build` and publishes `dist/` to GitHub Pages.
-
-One-time setup on GitHub: the repository must be named
-`gianlucanordio.github.io`, and Settings > Pages > Source must be set to
-"GitHub Actions".
+dependencies, runs `npm run build` and publishes `dist/` to GitHub Pages
+(Settings > Pages > Source is "GitHub Actions").
 
 To use a custom domain later: set `site` in `astro.config.mjs` to the new
 address, update the sitemap line in `public/robots.txt`, add a file
-`public/CNAME` containing the domain, and configure the DNS records as
-described in the GitHub Pages documentation.
-
-## Notes on the stack
-
-- Astro 7 ships its own Markdown engine (Sätteri) by default. This site uses
-  the older remark/rehype engine (`@astrojs/markdown-remark`) instead,
-  because the math plugins (`remark-math`, `rehype-katex`) need it.
-- `katex` is pinned to the 0.16 series on purpose: it must be the same
-  version `rehype-katex` uses, or the math stylesheet does not match the
-  generated HTML and equations render wrongly. Upgrade the two together.
+`public/CNAME` containing the domain, configure the DNS records as described
+in the GitHub Pages documentation, and regenerate the QR code.

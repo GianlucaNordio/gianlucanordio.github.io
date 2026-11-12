@@ -1,11 +1,9 @@
 ---
 // The one layout shared by every page: <head>, top bar, footer.
-// The page sits on a grainy sky (day in light mode, night in dark mode).
 // By default the content is set on one paper "slip"; pages with their own
 // arrangement of slips (home, projects, CV) pass `bare`.
 import { Font } from 'astro:assets';
 import '../styles/global.css';
-import ThemeToggle from '../components/ThemeToggle.astro';
 import { SITE } from '../site.js';
 
 const { title, description = SITE.description, lang = 'en', type = 'website', bare = false } = Astro.props;
@@ -14,7 +12,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 const path = Astro.url.pathname;
 const nav = [
   { href: '/projects/', label: 'Projects' },
-  { href: '/notes/', label: 'Notes' },
   { href: '/about/', label: 'About' },
 ];
 ---
@@ -24,12 +21,10 @@ const nav = [
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light dark" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta property="og:site_name" content={SITE.title} />
     <meta property="og:title" content={title ?? SITE.title} />
@@ -38,13 +33,6 @@ const nav = [
     <meta property="og:url" content={canonical} />
     <Font cssVariable="--font-body" preload={[{ style: 'normal', weight: 400 }]} />
     <Font cssVariable="--font-mono" preload={[{ style: 'normal', weight: 700 }]} />
-    <script is:inline>
-      // Apply a theme chosen with the switch before the page is drawn.
-      try {
-        const theme = localStorage.getItem('theme');
-        if (theme) document.documentElement.dataset.theme = theme;
-      } catch {}
-    </script>
   </head>
   <body>
     <a class="skip tape" href="#content">Skip to content</a>
@@ -60,7 +48,6 @@ const nav = [
         }
         <a class="btn btn-tape btn-sm" href="/cv/" aria-current={path.startsWith('/cv/') ? 'page' : undefined}>CV →</a>
       </nav>
-      <ThemeToggle />
     </header>
     <main id="content" class:list={['page', { 'page-bare': bare }]}>
       {
@@ -77,7 +64,6 @@ const nav = [
       <span class="tape">© {new Date().getFullYear()} {SITE.title}</span>
       <a class="chip" href="https://github.com/GianlucaNordio">GitHub ↗</a>
       <a class="chip" href="https://www.linkedin.com/in/gianluca-nordio/">LinkedIn ↗</a>
-      <a class="chip" href="/rss.xml">RSS</a>
     </footer>
   </body>
 </html>
