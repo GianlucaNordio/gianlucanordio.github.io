@@ -65,7 +65,8 @@ package.json                Dependencies and the npm scripts
 .nvmrc                      Node version for nvm
 tsconfig.json               Editor support for Astro files (nothing to edit)
 .github/workflows/deploy.yml  Build and deploy to GitHub Pages on push to main
-public/                     Copied to the site as is: favicon.svg, robots.txt,
+public/                     Copied to the site as is: the robot-emoji icons (favicon.svg,
+                            favicon-32.png, apple-touch-icon.png), robots.txt,
                             gianluca-nordio-cv.pdf, qr.png (QR code of the site)
 src/
   content.config.ts         The frontmatter schema of projects
