@@ -67,7 +67,7 @@ tsconfig.json               Editor support for Astro files (nothing to edit)
 .github/workflows/deploy.yml  Build and deploy to GitHub Pages on push to main
 public/                     Copied to the site as is: the robot-emoji icons (favicon.svg,
                             favicon-32.png, apple-touch-icon.png), robots.txt,
-                            gianluca-nordio-cv.pdf, qr.png (QR code of the site)
+                            gianluca-nordio-cv.pdf, qr.png and qr.svg (QR code of the site)
 src/
   content.config.ts         The frontmatter schema of projects
   site.js                   Site title and description; getProjects()
@@ -79,6 +79,7 @@ src/
   pages/projects.astro      All projects
   pages/cv.astro            CV page
   pages/about.astro         About
+  pages/qr.astro            /qr/: the QR code of the site, to show from a phone
   pages/404.astro           Page not found
   plugins/rehype-figure.mjs     Turns an image with a title into figure + caption
   plugins/rehype-task-list.mjs  Names task-list checkboxes for screen readers

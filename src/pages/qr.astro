@@ -1,0 +1,19 @@
+---
+// /qr/: the QR code of the site, large enough to scan from a phone screen.
+// Not in the menu; open gianlucanordio.github.io/qr/ to show it to someone.
+// The images are in public/: qr.png and qr.svg.
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="QR code" description="Scan to open gianlucanordio.github.io." bare>
+  <h1 class="page-title"><span class="tape">Scan me</span></h1>
+  <figure class="slip qr-card">
+    <span class="kicker">gianlucanordio.github.io</span>
+    <img src="/qr.svg" alt="QR code that opens gianlucanordio.github.io." width="512" height="512" />
+    <figcaption>Point a phone camera at the code to open the site.</figcaption>
+  </figure>
+  <p class="actions qr-actions">
+    <a class="btn btn-tape" href="/qr.png" download="gianluca-nordio-qr.png">Download PNG ↓</a>
+    <a class="btn btn-paper" href="/qr.svg" download="gianluca-nordio-qr.svg">Download SVG ↓</a>
+  </p>
+</Base>

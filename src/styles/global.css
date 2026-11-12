@@ -1109,3 +1109,28 @@ sup a:hover,
 .site-footer {
   width: 100%;
 }
+
+/* QR page: the code as large as the screen allows, on white for scanning. */
+.qr-card {
+  --tilt: -0.6deg;
+  max-width: min(30rem, 100%);
+  margin: 0 auto;
+  padding-top: 2.2rem;
+  text-align: center;
+}
+
+.qr-card img {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  image-rendering: pixelated;
+}
+
+.qr-card figcaption {
+  margin-top: 1rem;
+}
+
+.qr-actions {
+  justify-content: center;
+  margin-top: 2rem;
+}
