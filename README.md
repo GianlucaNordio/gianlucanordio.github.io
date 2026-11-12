@@ -109,7 +109,8 @@ package.json                Dependencies and the npm scripts
 tsconfig.json               Editor support for Astro files (nothing to edit)
 .github/workflows/deploy.yml  Build and deploy to GitHub Pages on push to main
 scripts/new-note.mjs        The `npm run new` script
-public/                     Copied to the site as is: favicon.svg, robots.txt
+public/                     Copied to the site as is: favicon.svg, robots.txt,
+                            gianluca-nordio-cv.pdf (the CV, without phone number), qr.png
 src/
   content.config.ts         The frontmatter schemas of notes and projects
   site.js                   Site title and description; getNotes(), getProjects()
@@ -125,6 +126,7 @@ src/
   pages/projects.astro      All projects
   pages/tags/[tag].astro    A tag page
   pages/about.astro         About
+  pages/cv.astro            CV page; keep in step with the PDF in public/
   pages/404.astro           Page not found
   pages/rss.xml.js          RSS feed at /rss.xml
   plugins/rehype-figure.mjs     Turns an image with a title into figure + caption

@@ -1,0 +1,105 @@
+---
+// /cv/: a short CV that reads well on a phone, with the full PDF linked.
+// Keep it in step with the PDF in public/gianluca-nordio-cv.pdf.
+import Base from '../layouts/Base.astro';
+
+const pdf = '/gianluca-nordio-cv.pdf';
+
+const experience = [
+  {
+    role: 'Robotics Software Engineer',
+    org: 'Robotize',
+    dates: 'Sep 2026 – present',
+    items: [
+      'Training and deploying object detection and segmentation models for mobile robot navigation.',
+      'ROS, ROS 2, C++, Python, PyTorch, TensorRT, Jenkins, simulation.',
+    ],
+  },
+  {
+    role: 'Student AI Researcher',
+    org: 'Robotize',
+    dates: 'Jul 2025 – Aug 2026',
+    items: [
+      'Made the company testing pipeline platform independent, so tests run across older and newer software versions.',
+      'Found more than 10 critical bugs.',
+      'Carried out my M.Sc. thesis on robust AMR localization with the company.',
+    ],
+  },
+  {
+    role: 'Student Researcher',
+    org: 'MARS Lab',
+    dates: '2025 – 2026',
+    items: [
+      'Developed reinforcement learning policies for autonomous racing drones competing in the A2RL championship.',
+      'Deployed trained policies on edge hardware, closing the gap between simulation and real flight.',
+    ],
+  },
+  {
+    role: 'Software Engineer and Volunteer',
+    org: 'Leo Club Italy',
+    dates: '2022 – present',
+    items: [
+      'Built and maintain the website, reducing costs to 1% of the original.',
+      'Implemented an internal data portal for 3000 users.',
+    ],
+  },
+];
+
+const education = [
+  {
+    role: 'M.Sc. in Autonomous Systems',
+    org: 'Technical University of Denmark (DTU)',
+    dates: 'Aug 2026',
+    items: [
+      'Thesis with Robotize: robust AMR localization in dynamic industrial environments.',
+      'Special project: reinforcement learning for drone navigation inside ballast tanks.',
+      'Second among 21 teams in the RoboCup robotics competition.',
+    ],
+  },
+  {
+    role: 'M.Sc. in Computer Engineering: AI and Robotics',
+    org: 'University of Padua',
+    dates: 'Oct 2026',
+    items: [
+      'TIME Double Degree with DTU, one of 10 students selected from the School of Engineering.',
+      'Wrote the official book for the Deep Learning course. GPA 3.96.',
+    ],
+  },
+  {
+    role: 'B.Sc. in Computer Engineering',
+    org: 'University of Padua',
+    dates: '2023',
+    items: ['110/110 with honors. Thesis on RGB-D and IMU sensors for human action recognition.'],
+  },
+];
+
+const sections = [
+  { title: 'Experience', entries: experience },
+  { title: 'Education', entries: education },
+];
+---
+
+<Base title="CV" description="CV of Gianluca Nordio, robotics software engineer.">
+  <h1>CV</h1>
+  <p class="project-links"><a href={pdf}>Download the PDF</a></p>
+  {
+    sections.map((section) => (
+      <section>
+        <h2>{section.title}</h2>
+        {section.entries.map((entry) => (
+          <article class="cv-entry">
+            <h3>
+              {entry.role}, {entry.org}
+            </h3>
+            <p class="meta">{entry.dates}</p>
+            <ul>
+              {entry.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </section>
+    ))
+  }
+</Base>

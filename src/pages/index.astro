@@ -16,8 +16,8 @@ const selected = featured.length ? featured : projects.slice(0, 3);
   <h1 class="sr-only">{SITE.title}</h1>
   <div class="intro">
     <p>
-      I'm Gianluca Nordio, a robotics software engineer in Copenhagen. I work on ROS 2, perception
-      and mobile robots.
+      I'm Gianluca Nordio, a robotics software engineer at Robotize in Copenhagen. I work on ROS 2,
+      perception and mobile robots. Here is my <a href="/cv/">CV</a>.
     </p>
     <p>
       This site holds my notes and projects: technical write-ups, things I have built, and essays on
@@ -25,13 +25,17 @@ const selected = featured.length ? featured : projects.slice(0, 3);
     </p>
   </div>
 
-  <section class="home-section">
-    <div class="section-head">
-      <h2>Recent notes</h2>
-      <a href="/notes/">All notes</a>
-    </div>
-    <NoteList notes={notes} byYear={false} />
-  </section>
+  {
+    notes.length > 0 && (
+      <section class="home-section">
+        <div class="section-head">
+          <h2>Recent notes</h2>
+          <a href="/notes/">All notes</a>
+        </div>
+        <NoteList notes={notes} byYear={false} />
+      </section>
+    )
+  }
 
   <section class="home-section">
     <div class="section-head">

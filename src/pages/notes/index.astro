@@ -9,5 +9,5 @@ const notes = await getNotes();
 
 <Base title="Notes" description="All notes, newest first.">
   <h1>Notes</h1>
-  <NoteList notes={notes} />
+  {notes.length > 0 ? <NoteList notes={notes} /> : <p>No notes yet.</p>}
 </Base>

@@ -4,6 +4,7 @@ date: 2026-10-03
 tags: [meta]
 lang: en
 description: Every Markdown element the site supports, on one page.
+draft: true
 ---
 
 This note contains every element a note can use, so the whole design can be judged on one page. This first paragraph is plain running text, long enough to show the measure, the line height and how the serif sets over several lines. Inline styles: *emphasis*, **strong emphasis**, ~~strikethrough~~, `inline code`, a [link to the home page](/) and a footnote reference.[^first]

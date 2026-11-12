@@ -4,6 +4,7 @@ date: 2026-09-21
 tags: [robotics, localization]
 lang: en
 description: The EKF for a differential-drive robot, from the motion model to forty lines of Python. Sample note.
+draft: true
 ---
 
 *This is a sample note, written to test the layout with code and math.*

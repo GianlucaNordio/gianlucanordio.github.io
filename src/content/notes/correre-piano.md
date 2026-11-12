@@ -4,6 +4,7 @@ date: 2025-11-16
 tags: [libri, corsa]
 lang: it
 description: Su «L'arte di correre» di Murakami e sulla fatica che non si vede. Nota di esempio.
+draft: true
 ---
 
 *Questa è una nota di esempio, scritta per provare l'impaginazione di un testo lungo in italiano.*
