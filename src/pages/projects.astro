@@ -1,6 +1,7 @@
 ---
 // /projects/: every project on one page, newest first.
 import { render } from 'astro:content';
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import { getProjects } from '../site.js';
 
@@ -32,6 +33,12 @@ const projects = await Promise.all(
           {data.tech.length > 0 && <span>{data.tech.join(' · ')}</span>}
         </p>
         <div class="prose">{body?.trim() ? <Content /> : <p>{data.description}</p>}</div>
+        {data.images.map((picture) => (
+          <figure>
+            <Image src={picture.src} alt={picture.alt} widths={[400, 700, 1000]} sizes="(max-width: 720px) 100vw, 650px" />
+            {picture.caption && <figcaption>{picture.caption}</figcaption>}
+          </figure>
+        ))}
         {data.linkedin && (
           <iframe
             class="linkedin-embed"

@@ -22,7 +22,7 @@ const notes = defineCollection({
 // line used on the home page.
 const projects = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/projects' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     year: z.number(),
     description: z.string(),
@@ -32,6 +32,10 @@ const projects = defineCollection({
     note: z.string().optional(),
     // Link to a LinkedIn post: its photos and video are embedded on /projects/.
     linkedin: z.url().optional(),
+    // Pictures shown below the text, from src/content/projects/images/.
+    images: z
+      .array(z.object({ src: image(), alt: z.string(), caption: z.string().optional() }))
+      .default([]),
     featured: z.boolean().default(false),
     draft: z.boolean().default(false),
   }),

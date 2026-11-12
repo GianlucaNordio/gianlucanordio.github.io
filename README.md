@@ -69,6 +69,11 @@ tech: [ROS 2, C++]              # optional
 repo: https://github.com/...    # optional: shown as "Code"
 link: https://...               # optional: demo, paper, video; shown as "Link"
 note: ekf-planar-robot          # optional: file name of a note, shown as "Write-up"
+linkedin: https://www.linkedin.com/posts/...  # optional: embeds the post, with its photos and video
+images:                         # optional: pictures from src/content/projects/images/
+  - src: ./images/robot.jpg
+    alt: What the picture shows, for screen readers.
+    caption: Optional caption.
 featured: true                  # optional: list it on the home page
 draft: true                     # optional: as for notes
 ---

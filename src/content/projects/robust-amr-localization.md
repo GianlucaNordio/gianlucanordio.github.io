@@ -4,6 +4,13 @@ year: 2026
 description: A 2D-lidar map updater that keeps AMCL localization reliable when the warehouse changes.
 tech: [ROS 1, Python, C++, Gazebo, Docker]
 repo: https://github.com/GianlucaNordio/Robust_AMR_Localization
+images:
+  - src: ./images/robotize-gopal-400.jpg
+    alt: A Robotize GoPal 400 pallet robot carrying a pallet stacked with cardboard boxes.
+    caption: The Robotize GoPal 400, the kind of pallet robot the map updater is built for. Photo by Robotize.
+  - src: ./images/thesis-gazebo-warehouse.jpg
+    alt: A simulated warehouse in Gazebo, with rows of pallets and boxes.
+    caption: One of the simulated warehouse scenarios used to test the map updater.
 featured: true
 ---
 
